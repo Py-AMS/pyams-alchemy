@@ -16,12 +16,13 @@ This module is used for Pyramid integration
 """
 
 from pyams_alchemy.interfaces import MANAGE_SQL_ENGINES_PERMISSIONS, SQL_MANAGER_ROLE
+from pyams_security.interfaces import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
+from pyams_security.interfaces.base import ROLE_ID
 
 
 __docformat__ = 'restructuredtext'
 
 from pyams_alchemy import _
-from pyams_security.interfaces import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 
 
 def include_package(config):
@@ -37,11 +38,10 @@ def include_package(config):
     })
 
     # upgrade system manager roles
-    config.upgrade_role(SYSTEM_ADMIN_ROLE, {
-        'permissions': {
-            MANAGE_SQL_ENGINES_PERMISSIONS
-        }
-    })
+    config.upgrade_role(SYSTEM_ADMIN_ROLE,
+                        permissions={
+                            MANAGE_SQL_ENGINES_PERMISSIONS
+                        })
 
     # register new roles
     config.register_role({
@@ -51,7 +51,8 @@ def include_package(config):
             MANAGE_SQL_ENGINES_PERMISSIONS
         },
         'managers': {
-            ADMIN_USER_ID
+            ADMIN_USER_ID,
+            ROLE_ID.format(SYSTEM_ADMIN_ROLE)
         }
     })
 
