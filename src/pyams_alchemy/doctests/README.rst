@@ -10,6 +10,7 @@ This package is composed of a set of utility functions, usable into any Pyramid 
     >>> from pyramid.testing import setUp, tearDown, DummyRequest
     >>> config = setUp(hook_zca=True)
     >>> config.registry.settings['zodbconn.uri'] = 'memory://'
+    >>> config.registry.settings['pyams_alchemy.cleaner.timeout'] = 'off'
 
     >>> from pyramid_zodbconn import includeme as include_zodbconn
     >>> include_zodbconn(config)
