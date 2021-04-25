@@ -15,6 +15,9 @@
 This module is used for Pyramid integration
 """
 
+import logging
+
+from pyams_alchemy.engine import ConnectionCleanerThread
 from pyams_alchemy.interfaces import MANAGE_SQL_ENGINES_PERMISSIONS, SQL_MANAGER_ROLE
 from pyams_security.interfaces import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 from pyams_security.interfaces.base import ROLE_ID
@@ -23,6 +26,9 @@ from pyams_security.interfaces.base import ROLE_ID
 __docformat__ = 'restructuredtext'
 
 from pyams_alchemy import _
+
+
+LOGGER = logging.getLogger('PyAMS (SQLAlchemy)')
 
 
 def include_package(config):
@@ -70,3 +76,10 @@ def include_package(config):
         ignored.append('pyams_alchemy.task')
 
     config.scan(ignore=ignored)
+
+    timeout = config.registry.settings.get('pyams_alchemy.cleaner.timeout', '300')
+    if timeout and (timeout.lower() not in ('off', 'false', '0', 'disabled')):
+        LOGGER.info("Starting SQLAlchemy connections management thread...")
+        cleaner_thread = ConnectionCleanerThread(int(timeout))
+        cleaner_thread.daemon = True
+        cleaner_thread.start()
