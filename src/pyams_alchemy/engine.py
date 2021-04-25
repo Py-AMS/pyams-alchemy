@@ -87,10 +87,12 @@ class ConnectionCleanerThread(Thread):
     """Background thread used to clean unused database connections
 
     Each connection is referenced in CONNECTION_TIMESTAMPS mapping on checkin and is invalidated
-    if not being used after 5 minutes
+    if not being used after given timeout (5 minutes by default)
     """
 
-    timeout = 300
+    def __init__(self, timeout=300, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.timeout = timeout
 
     def run(self):
         while True:
@@ -106,12 +108,6 @@ class ConnectionCleanerThread(Thread):
             time.sleep(60)
 
 
-LOGGER.info("Starting SQLAlchemy connections management thread")
-cleaner_thread = ConnectionCleanerThread()
-cleaner_thread.daemon = True
-cleaner_thread.start()
-
-
 class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
     """SQLAlchemy engine utility"""
 
@@ -124,9 +120,11 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
     echo_pool = FieldProperty(IAlchemyEngineUtility['echo_pool'])
     encoding = FieldProperty(IAlchemyEngineUtility['encoding'])
     convert_unicode = FieldProperty(IAlchemyEngineUtility['convert_unicode'])
+    twophase = FieldProperty(IAlchemyEngineUtility['twophase'])
 
     def __init__(self, name='', dsn='', echo=False, use_pool=True, pool_size=25, pool_recycle=-1,
-                 echo_pool=False, encoding='utf-8', convert_unicode=False, **kwargs):
+                 echo_pool=False, encoding='utf-8', convert_unicode=False, twophase=True,
+                 **kwargs):
         # pylint: disable=too-many-arguments
         self.name = name
         self.dsn = dsn
@@ -137,6 +135,7 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
         self.echo_pool = echo_pool
         self.encoding = encoding
         self.convert_unicode = convert_unicode
+        self.twophase = twophase
         self.kw = PersistentMapping()  # pylint: disable=invalid-name
         self.kw.update(kwargs)
 
@@ -156,7 +155,6 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
                                  poolclass=NullPool,
                                  encoding=self.encoding,
                                  convert_unicode=self.convert_unicode,
-                                 strategy='threadlocal',
                                  **kw)
         # Store engine into volatile attributes when pooling is enabled
         engine = getattr(self, '_v_engine', None)
@@ -170,7 +168,6 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
                               echo_pool=self.echo_pool,
                               encoding=self.encoding,
                               convert_unicode=self.convert_unicode,
-                              strategy='threadlocal',
                               **kw)
         return engine
 
@@ -222,7 +219,7 @@ def get_engine(engine, use_pool=True):
     if isinstance(engine, str):
         engine = query_utility(IAlchemyEngineUtility, name=engine)
         if engine is not None:
-            return engine.get_engine(use_pool)
+            return engine.get_engine(use_pool), engine.twophase
     return None
 
 
@@ -241,12 +238,12 @@ def get_session(engine, join=True, status=STATUS_ACTIVE, request=None, alias=Non
     session_data = get_request_data(request, REQUEST_SESSION_KEY, {})
     session = session_data.get(alias)
     if session is None:
-        _engine = get_engine(engine, use_pool)
+        _engine, _twophase = get_engine(engine, use_pool)
         if use_zope_extension:
             factory = scoped_session(sessionmaker(bind=_engine,
-                                                  twophase=twophase))
+                                                  twophase=twophase and _twophase))
         else:
-            factory = sessionmaker(bind=_engine, twophase=twophase)
+            factory = sessionmaker(bind=_engine, twophase=twophase and _twophase)
         session = factory()
         if use_zope_extension:
             register(session, initial_state=status)

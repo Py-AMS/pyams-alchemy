@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2021-02-01 09:02+0100\n"
+"POT-Creation-Date: 2021-04-25 13:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Lingua 3.10.dev0\n"
+"Generated-By: Lingua 4.14\n"
 
-#: ./src/pyams_alchemy/include.py:36
+#: ./src/pyams_alchemy/include.py:43
 msgid "Manage SQL engines properties"
 msgstr ""
 
-#: ./src/pyams_alchemy/include.py:49
+#: ./src/pyams_alchemy/include.py:55
 msgid "SQL engines manager (role)"
 msgstr ""
 
@@ -88,8 +88,22 @@ msgstr ""
 msgid "Convert Unicode"
 msgstr ""
 
-#: ./src/pyams_alchemy/interfaces.py:117
+#: ./src/pyams_alchemy/interfaces.py:98
+msgid "Two-phases commit?"
+msgstr ""
+
+#: ./src/pyams_alchemy/interfaces.py:99
+msgid ""
+"Disable this option if two-phases commits should be disabled (for SQLite for "
+"example)"
+msgstr ""
+
+#: ./src/pyams_alchemy/interfaces.py:123
 msgid "SQL managers"
+msgstr ""
+
+#: ./src/pyams_alchemy/zmi/engine.py:59
+msgid "An SQLAlchemy engine is already registered with this name!"
 msgstr ""
 
 #: ./src/pyams_alchemy/zmi/engine.py:72
@@ -116,52 +130,48 @@ msgstr ""
 msgid "Clone SQL connection"
 msgstr ""
 
-#: ./src/pyams_alchemy/zmi/engine.py:59
-msgid "An SQLAlchemy engine is already registered with this name!"
-msgstr ""
-
-#: ./src/pyams_alchemy/zmi/test.py:60
+#: ./src/pyams_alchemy/zmi/test.py:59
 msgid "Test engine"
 msgstr ""
 
-#: ./src/pyams_alchemy/zmi/test.py:120
-msgid "Test SQLAlchemy engine"
-msgstr ""
-
-#: ./src/pyams_alchemy/zmi/test.py:272
-msgid "SQLAlchemy engine test"
-msgstr ""
-
-#: ./src/pyams_alchemy/zmi/test.py:274
-msgid "SQL query results"
-msgstr ""
-
-#: ./src/pyams_alchemy/zmi/test.py:73 ./src/pyams_alchemy/task/__init__.py:43
+#: ./src/pyams_alchemy/zmi/test.py:72 ./src/pyams_alchemy/task/__init__.py:43
 msgid "SQL query"
 msgstr ""
 
-#: ./src/pyams_alchemy/zmi/test.py:74
+#: ./src/pyams_alchemy/zmi/test.py:73
 msgid "Enter valid SQL code; WARNING: query will NOT be committed!!"
 msgstr ""
 
-#: ./src/pyams_alchemy/zmi/test.py:82
+#: ./src/pyams_alchemy/zmi/test.py:81
 msgid "Execute query"
 msgstr ""
 
-#: ./src/pyams_alchemy/zmi/test.py:85
+#: ./src/pyams_alchemy/zmi/test.py:84
 msgid "Close"
 msgstr ""
 
-#: ./src/pyams_alchemy/zmi/test.py:96
+#: ./src/pyams_alchemy/zmi/test.py:97
 #, python-format
 msgid "SQL engine: {}"
 msgstr ""
 
-#: ./src/pyams_alchemy/zmi/test.py:252
+#: ./src/pyams_alchemy/zmi/test.py:121
+msgid "Test SQLAlchemy engine"
+msgstr ""
+
+#: ./src/pyams_alchemy/zmi/test.py:255
 #, python-format
 msgid ""
 "Request results contains more than {batch} records; only the first records "
 "are displayed."
+msgstr ""
+
+#: ./src/pyams_alchemy/zmi/test.py:276
+msgid "SQLAlchemy engine test"
+msgstr ""
+
+#: ./src/pyams_alchemy/zmi/test.py:278
+msgid "SQL query results"
 msgstr ""
 
 #: ./src/pyams_alchemy/zmi/__init__.py:45
@@ -201,10 +211,11 @@ msgstr ""
 msgid "SQL task settings"
 msgstr ""
 
-#: ./src/pyams_alchemy/task/zmi/__init__.py:79
-msgid "Add SQL query..."
-msgstr ""
-
+#. pylint: disable=no-member
 #: ./src/pyams_alchemy/task/zmi/__init__.py:61
 msgid "Select connection name..."
+msgstr ""
+
+#: ./src/pyams_alchemy/task/zmi/__init__.py:79
+msgid "Add SQL query..."
 msgstr ""

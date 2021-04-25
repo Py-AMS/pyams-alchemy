@@ -95,6 +95,12 @@ class IAlchemyEngineUtility(IAttributeAnnotatable):
                            required=True,
                            default=False)
 
+    twophase = Bool(title=_("Two-phases commit?"),
+                    description=_("Disable this option if two-phases commits should be "
+                                  "disabled (for SQLite for example)"),
+                    required=True,
+                    default=True)
+
     def get_engine(self, use_pool=True):
         """Get SQLAlchemy engine"""
 
