@@ -54,7 +54,7 @@ class AlchemyManagerElementEditor(TableElementEditor):
     modal_target = False
 
     def __new__(cls, context, request, view):  # pylint: disable=unused-argument
-        if not request.has_permission(MANAGE_SQL_ENGINES_PERMISSIONS, context):
+        if not request.has_permission(MANAGE_SQL_ENGINES_PERMISSIONS, context=context):
             return None
         return TableElementEditor.__new__(cls)
 
