@@ -25,7 +25,7 @@ from zope.schema import Text
 from pyams_alchemy.engine import get_user_session
 from pyams_alchemy.interfaces import IAlchemyEngineUtility, IAlchemyManager, \
     MANAGE_SQL_ENGINES_PERMISSIONS
-from pyams_alchemy.zmi import AlchemyManagerTable
+from pyams_alchemy.zmi import AlchemyManagerEnginesTable
 from pyams_form.ajax import ajax_form_config
 from pyams_form.button import Buttons, handler
 from pyams_form.field import Fields
@@ -51,7 +51,7 @@ from pyams_alchemy import _  # pylint: disable=ungrouped-imports
 
 
 @adapter_config(name='test',
-                required=(IAlchemyManager, IAdminLayer, AlchemyManagerTable),
+                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
                 provides=IColumn)
 class AlchemyManagerTestColumn(ButtonColumn):
     """SQLAlchemy manager name column"""

@@ -23,6 +23,7 @@ from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
 from pyams_table.interfaces import IColumn, IValues
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.url import absolute_url
 from pyams_viewlet.manager import viewletmanager_config
 from pyams_zmi.helper.container import delete_container_element
 from pyams_zmi.interfaces import IAdminLayer
@@ -72,13 +73,13 @@ class AlchemyManagerEnginesListMenu(NavigationMenuItem):
     href = '#engines-list.html'
 
 
-class AlchemyManagerTable(Table):
+class AlchemyManagerEnginesTable(Table):
     """SQLAlchemy manager engines table"""
 
 
-@adapter_config(required=(IAlchemyManager, IAdminLayer, AlchemyManagerTable),
+@adapter_config(required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
                 provides=IValues)
-class AlchemyManagerTableValues(ContextRequestViewAdapter):
+class AlchemyManagerEnginesTableValues(ContextRequestViewAdapter):
     """SQLAlchemy manager table values adapter"""
 
     @property
@@ -88,16 +89,16 @@ class AlchemyManagerTableValues(ContextRequestViewAdapter):
 
 
 @adapter_config(name='name',
-                required=(IAlchemyManager, IAdminLayer, AlchemyManagerTable),
+                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
                 provides=IColumn)
-class AlchemyManagerNameColumn(NameColumn):
+class AlchemyManagerEnginesNameColumn(NameColumn):
     """SQLAlchemy manager name column"""
 
 
 @adapter_config(name='trash',
-                required=(IAlchemyManager, IAdminLayer, AlchemyManagerTable),
+                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
                 provides=IColumn)
-class AlchemyManagerTrashColumn(TrashColumn):
+class AlchemyManagerEnginesTrashColumn(TrashColumn):
     """SQLAlchemy manager trash column"""
 
     permission = MANAGE_SQL_ENGINES_PERMISSIONS
@@ -109,8 +110,13 @@ class AlchemyManagerEnginesView(TableAdminView):
     """SQLAlchemy manager engines view"""
 
     title = _("SQL engines")
-    table_class = AlchemyManagerTable
+    table_class = AlchemyManagerEnginesTable
     table_label = _("List of SQL engines")
+
+    @property
+    def back_url(self):
+        """Form back URL getter"""
+        return absolute_url(self.request.root, self.request, 'utilities.html')
 
 
 @view_config(name='delete-element.json', context=IAlchemyManager, request_type=IPyAMSLayer,
