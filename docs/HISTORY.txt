@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.2.1
+-----
+ - added missing "context" argument to permission check
+ - updated add menus registration for last release of PyAMS_zmi package
+
 1.2.0
 -----
  - added option to disable two-phases commit on any SQLALchemy engine
