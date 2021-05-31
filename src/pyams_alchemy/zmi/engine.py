@@ -22,7 +22,7 @@ from zope.intid import IIntIds
 
 from pyams_alchemy.interfaces import IAlchemyEngineUtility, IAlchemyManager, \
     MANAGE_SQL_ENGINES_PERMISSIONS
-from pyams_alchemy.zmi import AlchemyManagerEnginesView, AlchemyManagerTable
+from pyams_alchemy.zmi import AlchemyManagerEnginesTable
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
 from pyams_form.interfaces import DISPLAY_MODE
@@ -61,7 +61,7 @@ def handle_new_engine_data_extraction(event):
 
 
 @viewlet_config(name='add-sql-engine.menu',
-                context=IAlchemyManager, layer=IAdminLayer, view=AlchemyManagerEnginesView,
+                context=IAlchemyManager, layer=IAdminLayer, view=AlchemyManagerEnginesTable,
                 manager=IToolbarViewletManager, weight=10,
                 permission=MANAGE_SQL_ENGINES_PERMISSIONS)
 class AlchemyEngineAddMenu(ContextAction):
@@ -139,7 +139,7 @@ class AlchemyEngineEditFormAJAXRenderer(ContextRequestViewAdapter):
         return {
             'callbacks': [
                 get_json_table_row_refresh_callback(engine.__parent__, self.request,
-                                                    AlchemyManagerTable, engine)
+                                                    AlchemyManagerEnginesTable, engine)
             ]
         }
 
@@ -149,7 +149,7 @@ class AlchemyEngineEditFormAJAXRenderer(ContextRequestViewAdapter):
 #
 
 @adapter_config(name='clone',
-                required=(IAlchemyManager, IAdminLayer, AlchemyManagerTable),
+                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
                 provides=IColumn)
 class AlchemyEngineCloneColumn(ActionColumn):
     """SQLAlchemy engine clone column"""
