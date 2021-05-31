@@ -25,7 +25,7 @@ from zope.schema.fieldproperty import FieldProperty
 from pyams_alchemy.engine import get_user_session
 from pyams_alchemy.interfaces import IAlchemyConverter
 from pyams_alchemy.task.interfaces import IAlchemyTask
-from pyams_scheduler.interfaces import TASK_STATUS_EMPTY, TASK_STATUS_ERROR, TASK_STATUS_OK
+from pyams_scheduler.interfaces.task import TASK_STATUS_EMPTY, TASK_STATUS_ERROR, TASK_STATUS_OK
 from pyams_scheduler.task import Task
 from pyams_utils.factory import factory_config
 from pyams_utils.registry import get_utility
