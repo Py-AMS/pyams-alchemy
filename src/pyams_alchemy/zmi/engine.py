@@ -32,9 +32,11 @@ from pyams_skin.viewlet.actions import ContextAction
 from pyams_table.interfaces import IColumn
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.registry import get_utility, query_utility
+from pyams_utils.traversing import get_parent
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
-from pyams_zmi.helper.event import get_json_table_row_refresh_callback
+from pyams_zmi.helper.event import get_json_table_row_add_callback, \
+    get_json_table_row_refresh_callback
 from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.table import ITableElementEditor, ITableElementName
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
@@ -92,6 +94,23 @@ class AlchemyEngineAddForm(AdminModalAddForm):  # pylint: disable=abstract-metho
         self.context[hex(intids.register(obj))[2:]] = obj
 
 
+@adapter_config(required=(IAlchemyManager, IAdminLayer, AlchemyEngineAddForm),
+                provides=IAJAXFormRenderer)
+class AlchemyEngineAddFormRenderer(ContextRequestViewAdapter):
+    """Alchemy engine add form AJAX renderer"""
+
+    def render(self, changes):
+        """AJAX form renderer"""
+        if not changes:
+            return None
+        return {
+            'callbacks': [
+                get_json_table_row_add_callback(self.context, self.request,
+                                                AlchemyManagerEnginesTable, changes)
+            ]
+        }
+
+
 @adapter_config(required=IAlchemyEngineUtility,
                 provides=ITableElementName)
 def alchemy_engine_name_factory(context):
@@ -135,11 +154,11 @@ class AlchemyEngineEditFormAJAXRenderer(ContextRequestViewAdapter):
         """AJAX result renderer"""
         if not changes:
             return None
-        engine = self.view.context
+        manager = get_parent(self.context, IAlchemyManager)
         return {
             'callbacks': [
-                get_json_table_row_refresh_callback(engine.__parent__, self.request,
-                                                    AlchemyManagerEnginesTable, engine)
+                get_json_table_row_refresh_callback(manager, self.request,
+                                                    AlchemyManagerEnginesTable, self.context)
             ]
         }
 
@@ -183,3 +202,21 @@ class AlchemyEngineCloneForm(AdminModalAddForm):
     def add(self, obj):
         intids = get_utility(IIntIds)
         self.context.__parent__[hex(intids.register(obj))[2:]] = obj
+
+
+@adapter_config(required=(IAlchemyEngineUtility, IAdminLayer, AlchemyEngineCloneForm),
+                provides=IAJAXFormRenderer)
+class AlchemyEngineCloneFormRenderer(ContextRequestViewAdapter):
+    """Alchemy engine clone form AJAX renderer"""
+
+    def render(self, changes):
+        """AJAX form renderer"""
+        if not changes:
+            return None
+        manager = get_parent(self.context, IAlchemyManager)
+        return {
+            'callbacks': [
+                get_json_table_row_add_callback(manager, self.request,
+                                                AlchemyManagerEnginesTable, changes)
+            ]
+        }

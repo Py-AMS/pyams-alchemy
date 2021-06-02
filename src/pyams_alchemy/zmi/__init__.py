@@ -76,6 +76,8 @@ class AlchemyManagerEnginesListMenu(NavigationMenuItem):
 class AlchemyManagerEnginesTable(Table):
     """SQLAlchemy manager engines table"""
 
+    display_if_empty = True
+
 
 @adapter_config(required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
                 provides=IValues)
