@@ -90,7 +90,7 @@ class ConnectionCleanerThread(Thread):
     if not being used after given timeout (5 minutes by default)
     """
 
-    def __init__(self, timeout=300, *args, **kwargs):
+    def __init__(self, timeout=300, *args, **kwargs):  # pylint: disable=keyword-arg-before-vararg
         super().__init__(*args, **kwargs)
         self.timeout = timeout
 

@@ -25,7 +25,7 @@ from pyams_security.interfaces.base import ROLE_ID
 
 __docformat__ = 'restructuredtext'
 
-from pyams_alchemy import _
+from pyams_alchemy import _  # pylint: disable=ungrouped-imports
 
 
 LOGGER = logging.getLogger('PyAMS (SQLAlchemy)')
