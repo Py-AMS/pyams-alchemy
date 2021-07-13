@@ -44,6 +44,7 @@ from pyams_utils.registry import query_utility
 from pyams_utils.request import check_request, get_request_data, set_request_data
 from pyams_utils.traversing import get_parent
 from pyams_utils.vocabulary import LocalUtilitiesVocabulary, vocabulary_config
+from pyams_zmi.interfaces import IObjectLabel
 
 
 __docformat__ = 'restructuredtext'
@@ -180,6 +181,13 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
 @factory_config(IAlchemyEngineUtility)
 class PersistentAlchemyEngineUtility(Persistent, AlchemyEngineUtility, Contained):
     """Persistent implementation of SQLAlchemy engine utility"""
+
+
+@adapter_config(required=IAlchemyEngineUtility,
+                provides=IObjectLabel)
+def alchemy_engine_label(context):
+    """SQLAlchemy engine table element name factory"""
+    return context.name
 
 
 @adapter_config(required=IAlchemyEngineUtility,

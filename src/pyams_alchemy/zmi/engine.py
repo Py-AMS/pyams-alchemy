@@ -18,7 +18,6 @@ This module defines SQL engines management components.
 from pyramid.events import subscriber
 from zope.copy import copy
 from zope.interface import Interface, Invalid, implementer
-from zope.intid import IIntIds
 
 from pyams_alchemy.interfaces import IAlchemyEngineUtility, IAlchemyManager, \
     MANAGE_SQL_ENGINES_PERMISSIONS
@@ -31,14 +30,15 @@ from pyams_layer.interfaces import IPyAMSLayer
 from pyams_skin.viewlet.actions import ContextAction
 from pyams_table.interfaces import IColumn
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
-from pyams_utils.registry import get_utility, query_utility
+from pyams_utils.interfaces.intids import IUniqueID
+from pyams_utils.registry import query_utility
 from pyams_utils.traversing import get_parent
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
 from pyams_zmi.helper.event import get_json_table_row_add_callback, \
     get_json_table_row_refresh_callback
 from pyams_zmi.interfaces import IAdminLayer
-from pyams_zmi.interfaces.table import ITableElementEditor, ITableElementName
+from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import ActionColumn, TableElementEditor
 
@@ -77,7 +77,8 @@ class AlchemyEngineAddMenu(ContextAction):
     modal_target = True
 
 
-@ajax_form_config(name='add-sql-engine.html', context=IAlchemyManager, layer=IPyAMSLayer,
+@ajax_form_config(name='add-sql-engine.html',
+                  context=IAlchemyManager, layer=IPyAMSLayer,
                   permission=MANAGE_SQL_ENGINES_PERMISSIONS)
 @implementer(IAlchemyEngineAddForm)
 class AlchemyEngineAddForm(AdminModalAddForm):  # pylint: disable=abstract-method
@@ -90,11 +91,53 @@ class AlchemyEngineAddForm(AdminModalAddForm):  # pylint: disable=abstract-metho
     content_factory = IAlchemyEngineUtility
 
     def add(self, obj):
-        intids = get_utility(IIntIds)
-        self.context[hex(intids.register(obj))[2:]] = obj
+        oid = IUniqueID(obj)
+        self.context[oid] = obj
 
 
-@adapter_config(required=(IAlchemyManager, IAdminLayer, AlchemyEngineAddForm),
+#
+# Alchemy engine clone form
+#
+
+@adapter_config(name='clone',
+                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
+                provides=IColumn)
+class AlchemyEngineCloneColumn(ActionColumn):
+    """SQLAlchemy engine clone column"""
+
+    hint = _("Clone SQL engine")
+    icon_class = 'far fa-clone'
+
+    href = 'clone-sql-engine.html'
+
+    weight = 100
+
+
+@ajax_form_config(name='clone-sql-engine.html',
+                  context=IAlchemyEngineUtility, layer=IPyAMSLayer,
+                  permission=MANAGE_SQL_ENGINES_PERMISSIONS)
+@implementer(IAlchemyEngineAddForm)
+class AlchemyEngineCloneForm(AdminModalAddForm):
+    """SQLAlchemy engine clone form"""
+
+    @property
+    def title(self):
+        """Title getter"""
+        return self.context.name
+
+    legend = _("Clone SQL connection")
+
+    fields = Fields(IAlchemyEngineUtility).select('name')
+
+    def create(self, data):
+        return copy(self.context)
+
+    def add(self, obj):
+        oid = IUniqueID(obj).oid
+        self.context.__parent__[oid] = obj
+
+
+@adapter_config(required=(IAlchemyManager, IAdminLayer, IAlchemyEngineAddForm),
                 provides=IAJAXFormRenderer)
 class AlchemyEngineAddFormRenderer(ContextRequestViewAdapter):
     """Alchemy engine add form AJAX renderer"""
@@ -103,20 +146,18 @@ class AlchemyEngineAddFormRenderer(ContextRequestViewAdapter):
         """AJAX form renderer"""
         if not changes:
             return None
+        manager = get_parent(self.context, IAlchemyManager)
         return {
             'callbacks': [
-                get_json_table_row_add_callback(self.context, self.request,
+                get_json_table_row_add_callback(manager, self.request,
                                                 AlchemyManagerEnginesTable, changes)
             ]
         }
 
 
-@adapter_config(required=IAlchemyEngineUtility,
-                provides=ITableElementName)
-def alchemy_engine_name_factory(context):
-    """SQLAlchemy engine table element name factory"""
-    return context.name
-
+#
+# Alchemy engine edit form
+#
 
 @adapter_config(required=(IAlchemyEngineUtility, IAdminLayer, Interface),
                 provides=ITableElementEditor)
@@ -159,64 +200,5 @@ class AlchemyEngineEditFormAJAXRenderer(ContextRequestViewAdapter):
             'callbacks': [
                 get_json_table_row_refresh_callback(manager, self.request,
                                                     AlchemyManagerEnginesTable, self.context)
-            ]
-        }
-
-
-#
-# Engine clone column
-#
-
-@adapter_config(name='clone',
-                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
-                provides=IColumn)
-class AlchemyEngineCloneColumn(ActionColumn):
-    """SQLAlchemy engine clone column"""
-
-    hint = _("Clone SQL engine")
-    icon_class = 'far fa-clone'
-
-    href = 'clone-sql-engine.html'
-
-    weight = 100
-
-
-@ajax_form_config(name='clone-sql-engine.html', context=IAlchemyEngineUtility,
-                  layer=IPyAMSLayer, permission=MANAGE_SQL_ENGINES_PERMISSIONS)
-@implementer(IAlchemyEngineAddForm)
-class AlchemyEngineCloneForm(AdminModalAddForm):
-    """SQLAlchemy engine clone form"""
-
-    @property
-    def title(self):
-        """Title getter"""
-        return self.context.name
-
-    legend = _("Clone SQL connection")
-
-    fields = Fields(IAlchemyEngineUtility).select('name')
-
-    def create(self, data):
-        return copy(self.context)
-
-    def add(self, obj):
-        intids = get_utility(IIntIds)
-        self.context.__parent__[hex(intids.register(obj))[2:]] = obj
-
-
-@adapter_config(required=(IAlchemyEngineUtility, IAdminLayer, AlchemyEngineCloneForm),
-                provides=IAJAXFormRenderer)
-class AlchemyEngineCloneFormRenderer(ContextRequestViewAdapter):
-    """Alchemy engine clone form AJAX renderer"""
-
-    def render(self, changes):
-        """AJAX form renderer"""
-        if not changes:
-            return None
-        manager = get_parent(self.context, IAlchemyManager)
-        return {
-            'callbacks': [
-                get_json_table_row_add_callback(manager, self.request,
-                                                AlchemyManagerEnginesTable, changes)
             ]
         }
