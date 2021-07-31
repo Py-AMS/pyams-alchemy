@@ -16,6 +16,7 @@ This module is used for Pyramid integration
 """
 
 import logging
+import re
 
 from pyams_alchemy.engine import ConnectionCleanerThread
 from pyams_alchemy.interfaces import MANAGE_SQL_ENGINES_PERMISSIONS, SQL_MANAGER_ROLE
@@ -67,8 +68,7 @@ def include_package(config):
     try:
         import pyams_zmi  # pylint: disable=import-outside-toplevel,unused-import
     except ImportError:
-        ignored.append('pyams_alchemy.zmi')
-        ignored.append('pyams_alchemy.task.zmi')
+        ignored.append(re.compile(r'pyams_alchemy\..*\.zmi\.?.*').search)
 
     try:
         import pyams_scheduler  # pylint: disable=import-outside-toplevel,unused-import
