@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2021-04-25 13:10+0200\n"
+"POT-Creation-Date: 2021-07-16 23:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,43 +105,49 @@ msgid ""
 "Disable this option if two-phases commits should be disabled (for SQLite for "
 "example)"
 msgstr ""
-"Habituellement, les transactions SQL sont imbriquées au sein des transactions HTTP via "
-"un processus de commit dit \"en deux phases\", qui permet d'avoir une gestion globale de "
-"l'ensemble de la transaction ; vous pouvez désactiver cette option pour "
-"des besoins spécifiques, ou si le moteur de bases de données ne supporte pas cette "
-"fonctionnalité (pour SQLite par exemple)"
+"Habituellement, les transactions SQL sont imbriquées au sein des "
+"transactions HTTP via un processus de commit dit \"en deux phases\", qui "
+"permet d'avoir une gestion globale de l'ensemble de la transaction ; vous "
+"pouvez désactiver cette option pour des besoins spécifiques, ou si le moteur "
+"de bases de données ne supporte pas cette fonctionnalité (pour SQLite par "
+"exemple)"
 
 #: src/pyams_alchemy/interfaces.py:123
 msgid "SQL managers"
 msgstr "Gestionnaires SQL"
 
-#: src/pyams_alchemy/zmi/engine.py:59
+#: src/pyams_alchemy/zmi/engine.py:62
 msgid "An SQLAlchemy engine is already registered with this name!"
 msgstr "Une connexion SQL a déjà été enregistrée avec ce nom !"
 
-#: src/pyams_alchemy/zmi/engine.py:72
+#: src/pyams_alchemy/zmi/engine.py:75
 msgid "Add SQL engine"
 msgstr "Ajouter une connexion SQL"
 
-#: src/pyams_alchemy/zmi/engine.py:84
-msgid "Add new SQL engine"
-msgstr "Nouvelle connexion SQL"
+#: src/pyams_alchemy/zmi/engine.py:89
+msgid "New SQL engine"
+msgstr "Nouvelle connexion"
 
-#: src/pyams_alchemy/zmi/engine.py:85
+#: src/pyams_alchemy/zmi/engine.py:99
 msgid "New engine properties"
 msgstr "Propriétés de la connexion"
 
-#: src/pyams_alchemy/zmi/engine.py:118
-msgid "SQL engine properties"
-msgstr "Propriétés de la connexion SQL"
-
-#: src/pyams_alchemy/zmi/engine.py:157
+#: src/pyams_alchemy/zmi/engine.py:119
 msgid "Clone SQL engine"
 msgstr "Dupliquer la connexion"
 
-#: src/pyams_alchemy/zmi/engine.py:176
+#: src/pyams_alchemy/zmi/engine.py:134
 msgid "Clone SQL connection"
 msgstr "Dupliquer une connexion SQL"
+
+#: src/pyams_alchemy/zmi/engine.py:186 src/pyams_alchemy/zmi/test.py:97
+#, python-format
+msgid "SQL engine: {}"
+msgstr "Connexion : {}"
+
+#: src/pyams_alchemy/zmi/engine.py:188
+msgid "SQL engine properties"
+msgstr "Propriétés de la connexion SQL"
 
 #: src/pyams_alchemy/zmi/test.py:59
 msgid "Test engine"
@@ -165,11 +171,6 @@ msgstr "Exécuter la requête"
 msgid "Close"
 msgstr "Fermer"
 
-#: src/pyams_alchemy/zmi/test.py:97
-#, python-format
-msgid "SQL engine: {}"
-msgstr "Connexion SQL : {}"
-
 #: src/pyams_alchemy/zmi/test.py:121
 msgid "Test SQLAlchemy engine"
 msgstr "Test de la connexion SQL"
@@ -191,15 +192,15 @@ msgstr "Test de la connexion SQL"
 msgid "SQL query results"
 msgstr "Résultats de la requête SQL"
 
-#: src/pyams_alchemy/zmi/__init__.py:45
+#: src/pyams_alchemy/zmi/__init__.py:42
 msgid "SQL connections"
-msgstr "Connexion SQL"
+msgstr "Connexions SQL"
 
-#: src/pyams_alchemy/zmi/__init__.py:70 src/pyams_alchemy/zmi/__init__.py:111
+#: src/pyams_alchemy/zmi/__init__.py:81 src/pyams_alchemy/zmi/__init__.py:124
 msgid "SQL engines"
 msgstr "Connexions SQL"
 
-#: src/pyams_alchemy/zmi/__init__.py:113
+#: src/pyams_alchemy/zmi/__init__.py:126
 msgid "List of SQL engines"
 msgstr "Liste des connexions SQL"
 

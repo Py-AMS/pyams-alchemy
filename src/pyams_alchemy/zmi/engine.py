@@ -41,6 +41,7 @@ from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import ActionColumn, TableElementEditor
+from pyams_zmi.utils import get_object_label
 
 
 __docformat__ = 'restructuredtext'
@@ -77,14 +78,24 @@ class AlchemyEngineAddMenu(ContextAction):
     modal_target = True
 
 
+class AlchemyEngineBaseAddFormMixin:
+    """Alchemy engine base add form mixin"""
+
+    @property
+    def title(self):
+        translate = self.request.localizer.translate
+        return '<small>{}</small><br />{}'.format(
+            get_object_label(self.context, self.request, self),
+            translate(_("New SQL engine")))
+
+
 @ajax_form_config(name='add-sql-engine.html',
                   context=IAlchemyManager, layer=IPyAMSLayer,
                   permission=MANAGE_SQL_ENGINES_PERMISSIONS)
 @implementer(IAlchemyEngineAddForm)
-class AlchemyEngineAddForm(AdminModalAddForm):  # pylint: disable=abstract-method
+class AlchemyEngineAddForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):  # pylint: disable=abstract-method
     """SQLAlchemy engine add form"""
 
-    title = _("Add new SQL engine")
     legend = _("New engine properties")
 
     fields = Fields(IAlchemyEngineUtility)
@@ -117,13 +128,8 @@ class AlchemyEngineCloneColumn(ActionColumn):
                   context=IAlchemyEngineUtility, layer=IPyAMSLayer,
                   permission=MANAGE_SQL_ENGINES_PERMISSIONS)
 @implementer(IAlchemyEngineAddForm)
-class AlchemyEngineCloneForm(AdminModalAddForm):
+class AlchemyEngineCloneForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):
     """SQLAlchemy engine clone form"""
-
-    @property
-    def title(self):
-        """Title getter"""
-        return self.context.name
 
     legend = _("Clone SQL connection")
 
@@ -165,15 +171,19 @@ class AlchemyEngineElementEditor(TableElementEditor):
     """SQLAlchemy engines table element editor"""
 
 
-@ajax_form_config(name='properties.html', context=IAlchemyEngineUtility, layer=IPyAMSLayer,
+@ajax_form_config(name='properties.html',
+                  context=IAlchemyEngineUtility, layer=IPyAMSLayer,
                   permission=MANAGE_SQL_ENGINES_PERMISSIONS)
 class AlchemyEngineEditForm(AdminModalEditForm):
     """SQLAlchemy engine properties edit form"""
 
     @property
     def title(self):
-        """Title getter"""
-        return self.context.name
+        translate = self.request.localizer.translate
+        manager = query_utility(IAlchemyManager)
+        return '<small>{}</small><br />{}'.format(
+            get_object_label(manager, self.request, self),
+            translate(_("SQL engine: {}")).format(self.context.name))
 
     legend = _("SQL engine properties")
 

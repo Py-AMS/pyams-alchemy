@@ -17,7 +17,7 @@ This module provides management components for SQLAlchemy tasks.
 
 from zope.interface import alsoProvides, implementer
 
-from pyams_alchemy.task import IAlchemyTask
+from pyams_alchemy.task import AlchemyTask, IAlchemyTask
 from pyams_alchemy.task.interfaces import IAlchemyTaskInfo
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
@@ -27,7 +27,7 @@ from pyams_form.subform import InnerAddForm, InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_scheduler.interfaces import IScheduler, MANAGE_TASKS_PERMISSION
 from pyams_scheduler.zmi import SchedulerTasksTable
-from pyams_scheduler.zmi.task import BaseTaskAddForm, BaseTaskEditForm
+from pyams_scheduler.task.zmi import BaseTaskAddForm, BaseTaskEditForm
 from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import adapter_config
 from pyams_utils.interfaces.data import IObjectData
@@ -87,6 +87,7 @@ class AlchemyTaskAddForm(BaseTaskAddForm):
     """SQLAlchemy task add form"""
 
     content_factory = IAlchemyTask
+    content_label = AlchemyTask.label
 
 
 @adapter_config(name='sql-task-info.form',
