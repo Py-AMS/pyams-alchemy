@@ -102,7 +102,7 @@ class AlchemyEngineAddForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):  #
     content_factory = IAlchemyEngineUtility
 
     def add(self, obj):
-        oid = IUniqueID(obj)
+        oid = IUniqueID(obj).oid
         self.context[oid] = obj
 
 
