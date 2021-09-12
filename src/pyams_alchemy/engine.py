@@ -35,7 +35,7 @@ from zope.sqlalchemy.datamanager import STATUS_ACTIVE, STATUS_READONLY, _SESSION
     join_transaction
 
 from pyams_alchemy.interfaces import ALCHEMY_ENGINES_VOCABULARY, IAlchemyEngineUtility, \
-    MANAGE_SQL_ENGINES_PERMISSIONS, REQUEST_SESSION_KEY
+    MANAGE_SQL_ENGINES_PERMISSION, REQUEST_SESSION_KEY
 from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_site.interfaces import ISiteRoot
 from pyams_utils.adapter import ContextAdapter, adapter_config
@@ -195,7 +195,7 @@ def alchemy_engine_label(context):
 class AlchemyEnginePermissionChecker(ContextAdapter):
     """SQLAlchemy engine permission checker"""
 
-    edit_permission = MANAGE_SQL_ENGINES_PERMISSIONS
+    edit_permission = MANAGE_SQL_ENGINES_PERMISSION
 
 
 @subscriber(IObjectAddedEvent, context_selector=IAlchemyEngineUtility)

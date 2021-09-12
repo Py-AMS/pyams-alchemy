@@ -20,7 +20,7 @@ from zope.copy import copy
 from zope.interface import Interface, Invalid, implementer
 
 from pyams_alchemy.interfaces import IAlchemyEngineUtility, IAlchemyManager, \
-    MANAGE_SQL_ENGINES_PERMISSIONS
+    MANAGE_SQL_ENGINES_PERMISSION
 from pyams_alchemy.zmi import AlchemyManagerEnginesTable
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
@@ -63,10 +63,32 @@ def handle_new_engine_data_extraction(event):
                                                 "registered with this name!")),)
 
 
+@adapter_config(required=(IAlchemyManager, IAdminLayer, IAlchemyEngineAddForm),
+                provides=IAJAXFormRenderer)
+class AlchemyEngineAddFormRenderer(ContextRequestViewAdapter):
+    """Alchemy engine add form AJAX renderer"""
+
+    def render(self, changes):
+        """AJAX form renderer"""
+        if not changes:
+            return None
+        manager = get_parent(self.context, IAlchemyManager)
+        return {
+            'callbacks': [
+                get_json_table_row_add_callback(manager, self.request,
+                                                AlchemyManagerEnginesTable, changes)
+            ]
+        }
+
+
+#
+# Alchemy engine add form
+#
+
 @viewlet_config(name='add-sql-engine.menu',
                 context=IAlchemyManager, layer=IAdminLayer, view=AlchemyManagerEnginesTable,
                 manager=IToolbarViewletManager, weight=10,
-                permission=MANAGE_SQL_ENGINES_PERMISSIONS)
+                permission=MANAGE_SQL_ENGINES_PERMISSION)
 class AlchemyEngineAddMenu(ContextAction):
     """Alchemy engine add menu"""
 
@@ -78,6 +100,7 @@ class AlchemyEngineAddMenu(ContextAction):
     modal_target = True
 
 
+@implementer(IAlchemyEngineAddForm)
 class AlchemyEngineBaseAddFormMixin:
     """Alchemy engine base add form mixin"""
 
@@ -91,8 +114,7 @@ class AlchemyEngineBaseAddFormMixin:
 
 @ajax_form_config(name='add-sql-engine.html',
                   context=IAlchemyManager, layer=IPyAMSLayer,
-                  permission=MANAGE_SQL_ENGINES_PERMISSIONS)
-@implementer(IAlchemyEngineAddForm)
+                  permission=MANAGE_SQL_ENGINES_PERMISSION)
 class AlchemyEngineAddForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):  # pylint: disable=abstract-method
     """SQLAlchemy engine add form"""
 
@@ -126,8 +148,7 @@ class AlchemyEngineCloneColumn(ActionColumn):
 
 @ajax_form_config(name='clone-sql-engine.html',
                   context=IAlchemyEngineUtility, layer=IPyAMSLayer,
-                  permission=MANAGE_SQL_ENGINES_PERMISSIONS)
-@implementer(IAlchemyEngineAddForm)
+                  permission=MANAGE_SQL_ENGINES_PERMISSION)
 class AlchemyEngineCloneForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):
     """SQLAlchemy engine clone form"""
 
@@ -143,24 +164,6 @@ class AlchemyEngineCloneForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):
         self.context.__parent__[oid] = obj
 
 
-@adapter_config(required=(IAlchemyManager, IAdminLayer, IAlchemyEngineAddForm),
-                provides=IAJAXFormRenderer)
-class AlchemyEngineAddFormRenderer(ContextRequestViewAdapter):
-    """Alchemy engine add form AJAX renderer"""
-
-    def render(self, changes):
-        """AJAX form renderer"""
-        if not changes:
-            return None
-        manager = get_parent(self.context, IAlchemyManager)
-        return {
-            'callbacks': [
-                get_json_table_row_add_callback(manager, self.request,
-                                                AlchemyManagerEnginesTable, changes)
-            ]
-        }
-
-
 #
 # Alchemy engine edit form
 #
@@ -173,7 +176,7 @@ class AlchemyEngineElementEditor(TableElementEditor):
 
 @ajax_form_config(name='properties.html',
                   context=IAlchemyEngineUtility, layer=IPyAMSLayer,
-                  permission=MANAGE_SQL_ENGINES_PERMISSIONS)
+                  permission=MANAGE_SQL_ENGINES_PERMISSION)
 class AlchemyEngineEditForm(AdminModalEditForm):
     """SQLAlchemy engine properties edit form"""
 

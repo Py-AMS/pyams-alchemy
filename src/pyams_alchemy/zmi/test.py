@@ -24,7 +24,7 @@ from zope.schema import Text
 
 from pyams_alchemy.engine import get_user_session
 from pyams_alchemy.interfaces import IAlchemyEngineUtility, IAlchemyManager, \
-    MANAGE_SQL_ENGINES_PERMISSIONS
+    MANAGE_SQL_ENGINES_PERMISSION
 from pyams_alchemy.zmi import AlchemyManagerEnginesTable
 from pyams_form.ajax import ajax_form_config
 from pyams_form.button import Buttons, handler
@@ -59,7 +59,7 @@ class AlchemyManagerTestColumn(ButtonColumn):
     label = _("Test engine")
     status = 'secondary'
 
-    permission = MANAGE_SQL_ENGINES_PERMISSIONS
+    permission = MANAGE_SQL_ENGINES_PERMISSION
     href = 'test-sql-engine.html'
     modal_target = True
 
@@ -86,7 +86,7 @@ class IAlchemyEngineTestButtons(Interface):
 
 @ajax_form_config(name='test-sql-engine.html',
                   context=IAlchemyEngineUtility, layer=IPyAMSLayer,
-                  permission=MANAGE_SQL_ENGINES_PERMISSIONS)
+                  permission=MANAGE_SQL_ENGINES_PERMISSION)
 class AlchemyEngineTestForm(AdminModalAddForm):
     # pylint: disable=abstract-method
     """SQLAlchemy engine test form"""

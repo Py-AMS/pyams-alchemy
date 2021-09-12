@@ -18,7 +18,7 @@ This module defines main SQLAlchemy manager administration components.
 from pyramid.view import view_config
 from zope.interface import Interface
 
-from pyams_alchemy.interfaces import IAlchemyManager, MANAGE_SQL_ENGINES_PERMISSIONS
+from pyams_alchemy.interfaces import IAlchemyManager, MANAGE_SQL_ENGINES_PERMISSION
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
 from pyams_table.interfaces import IColumn, IValues
@@ -65,7 +65,7 @@ class AlchemyManagerElementEditor(TableElementEditor):
     modal_target = False
 
     def __new__(cls, context, request, view):  # pylint: disable=unused-argument
-        if not request.has_permission(MANAGE_SQL_ENGINES_PERMISSIONS, context=context):
+        if not request.has_permission(MANAGE_SQL_ENGINES_PERMISSION, context=context):
             return None
         return TableElementEditor.__new__(cls)
 
@@ -73,7 +73,7 @@ class AlchemyManagerElementEditor(TableElementEditor):
 @viewletmanager_config(name='engines-list.menu',
                        context=IAlchemyManager, layer=IAdminLayer,
                        manager=ISiteManagementMenu, weight=10,
-                       permission=MANAGE_SQL_ENGINES_PERMISSIONS,
+                       permission=MANAGE_SQL_ENGINES_PERMISSION,
                        provides=IPropertiesMenu)
 class AlchemyManagerEnginesListMenu(NavigationMenuItem):
     """SQLAlchemy manager engines list menu"""
@@ -113,11 +113,12 @@ class AlchemyManagerEnginesNameColumn(NameColumn):
 class AlchemyManagerEnginesTrashColumn(TrashColumn):
     """SQLAlchemy manager trash column"""
 
-    permission = MANAGE_SQL_ENGINES_PERMISSIONS
+    permission = MANAGE_SQL_ENGINES_PERMISSION
 
 
-@pagelet_config(name='engines-list.html', context=IAlchemyManager, layer=IPyAMSLayer,
-                permission=MANAGE_SQL_ENGINES_PERMISSIONS)
+@pagelet_config(name='engines-list.html',
+                context=IAlchemyManager, layer=IPyAMSLayer,
+                permission=MANAGE_SQL_ENGINES_PERMISSION)
 class AlchemyManagerEnginesView(TableAdminView):
     """SQLAlchemy manager engines view"""
 
@@ -133,8 +134,9 @@ class AlchemyManagerEnginesView(TableAdminView):
     back_url_target = None
 
 
-@view_config(name='delete-element.json', context=IAlchemyManager, request_type=IPyAMSLayer,
-             permission=MANAGE_SQL_ENGINES_PERMISSIONS, renderer='json', xhr=True)
+@view_config(name='delete-element.json',
+             context=IAlchemyManager, request_type=IPyAMSLayer,
+             permission=MANAGE_SQL_ENGINES_PERMISSION, renderer='json', xhr=True)
 def delete_sql_engine(request):
     """Delete SQL engine"""
     return delete_container_element(request)

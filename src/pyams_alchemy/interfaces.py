@@ -32,7 +32,7 @@ from pyams_alchemy import _
 # SQLAlchemy manager permissions
 #
 
-MANAGE_SQL_ENGINES_PERMISSIONS = 'pyams.ManageAlchemyEngines'
+MANAGE_SQL_ENGINES_PERMISSION = 'pyams.ManageAlchemyEngines'
 '''Permission used to manage SQLAlchemy engines'''
 
 SQL_MANAGER_ROLE = 'pyams.AlchemyManager'

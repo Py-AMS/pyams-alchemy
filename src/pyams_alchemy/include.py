@@ -19,7 +19,7 @@ import logging
 import re
 
 from pyams_alchemy.engine import ConnectionCleanerThread
-from pyams_alchemy.interfaces import MANAGE_SQL_ENGINES_PERMISSIONS, SQL_MANAGER_ROLE
+from pyams_alchemy.interfaces import MANAGE_SQL_ENGINES_PERMISSION, SQL_MANAGER_ROLE
 from pyams_security.interfaces import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 from pyams_security.interfaces.base import ROLE_ID
 
@@ -40,14 +40,14 @@ def include_package(config):
 
     # add SQLAlchemy management permissions
     config.register_permission({
-        'id': MANAGE_SQL_ENGINES_PERMISSIONS,
+        'id': MANAGE_SQL_ENGINES_PERMISSION,
         'title': _("Manage SQL engines properties")
     })
 
     # upgrade system manager roles
     config.upgrade_role(SYSTEM_ADMIN_ROLE,
                         permissions={
-                            MANAGE_SQL_ENGINES_PERMISSIONS
+                            MANAGE_SQL_ENGINES_PERMISSION
                         })
 
     # register new roles
@@ -55,7 +55,7 @@ def include_package(config):
         'id': SQL_MANAGER_ROLE,
         'title': _("SQL engines manager (role)"),
         'permissions': {
-            MANAGE_SQL_ENGINES_PERMISSIONS
+            MANAGE_SQL_ENGINES_PERMISSION
         },
         'managers': {
             ADMIN_USER_ID,
