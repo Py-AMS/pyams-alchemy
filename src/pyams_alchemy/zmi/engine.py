@@ -27,7 +27,7 @@ from pyams_form.field import Fields
 from pyams_form.interfaces import DISPLAY_MODE
 from pyams_form.interfaces.form import IAJAXFormRenderer, IAddForm, IDataExtractedEvent
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_skin.viewlet.actions import ContextAction
+from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.interfaces import IColumn
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.intids import IUniqueID
@@ -89,15 +89,11 @@ class AlchemyEngineAddFormRenderer(ContextRequestViewAdapter):
                 context=IAlchemyManager, layer=IAdminLayer, view=AlchemyManagerEnginesTable,
                 manager=IToolbarViewletManager, weight=10,
                 permission=MANAGE_SQL_ENGINES_PERMISSION)
-class AlchemyEngineAddMenu(ContextAction):
-    """Alchemy engine add menu"""
+class AlchemyEngineAddAction(ContextAddAction):
+    """Alchemy engine add action"""
 
-    status = 'success'
-    icon_class = 'fas fa-plus'
     label = _("Add SQL engine")
-
     href = 'add-sql-engine.html'
-    modal_target = True
 
 
 @implementer(IAlchemyEngineAddForm)
