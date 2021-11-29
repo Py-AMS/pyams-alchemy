@@ -62,7 +62,7 @@ class AlchemyTaskFormInfo(GroupManager):
         query = self.widgets.get('query')  # pylint: disable=no-member
         if query is not None:
             query.add_class('height-100')
-            query.widget_css_class = "editor height-100px"
+            query.widget_css_class = "editor height-400px"
             query.object_data = {
                 'ams-filename': 'query.sql'
             }
@@ -86,6 +86,8 @@ class AlchemyTaskAddMenu(MenuItem):
 class AlchemyTaskAddForm(BaseTaskAddForm):
     """SQLAlchemy task add form"""
 
+    modal_class = 'modal-xl'
+
     content_factory = IAlchemyTask
     content_label = AlchemyTask.label
 
@@ -101,6 +103,8 @@ class AlchemyTaskAddFormInfo(AlchemyTaskFormInfo, InnerAddForm):
                   permission=MANAGE_TASKS_PERMISSION)
 class AlchemyTaskEditForm(BaseTaskEditForm):
     """SQLAlchemy task edit form"""
+
+    modal_class = 'modal-xl'
 
 
 @adapter_config(name='sql-task-info.form',
