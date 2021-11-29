@@ -58,9 +58,9 @@ class AlchemyTask(Task):
                 report.write('SQL query: \n    {}\n\n'.format(
                     self.query.replace('\r', '').replace('\n', '\n    ')))
                 results = session.execute(self.query)
+                session.commit()
                 converter = get_utility(IAlchemyConverter, name=self.output_format)
                 result = converter.convert(results)
-                session.commit()
                 report.write('SQL output ({} records):\n\n'.format(results.rowcount))
                 report.write(result)
                 return TASK_STATUS_OK, result
