@@ -68,10 +68,10 @@ class AlchemyTask(Task):
                 report.write('SQL query returned no result.\n')
                 return TASK_STATUS_EMPTY, None
         except SQLAlchemyError:
+            session.rollback()
             etype, value, tb = sys.exc_info()  # pylint: disable=invalid-name
             report.write('\n\n'
                          'An SQL error occurred\n'
                          '=====================\n')
             report.write(''.join(traceback.format_exception(etype, value, tb)))
-            session.abort()
             return TASK_STATUS_ERROR, None
