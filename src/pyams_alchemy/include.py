@@ -20,8 +20,8 @@ import re
 
 from pyams_alchemy.engine import ConnectionCleanerThread
 from pyams_alchemy.interfaces import MANAGE_SQL_ENGINES_PERMISSION, SQL_MANAGER_ROLE
-from pyams_security.interfaces import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 from pyams_security.interfaces.base import ROLE_ID
+from pyams_security.interfaces.names import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 
 
 __docformat__ = 'restructuredtext'
