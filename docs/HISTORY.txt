@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.3.5
+-----
+ - PyAMS_security interfaces refactoring
+ - added support for Python 3.10
+
 1.3.4
 -----
  - handle session commit when query doesn't return any result
