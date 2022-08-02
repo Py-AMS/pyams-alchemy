@@ -25,7 +25,8 @@ from zope.schema.fieldproperty import FieldProperty
 from pyams_alchemy.engine import get_user_session
 from pyams_alchemy.interfaces import IAlchemyConverter
 from pyams_alchemy.task.interfaces import IAlchemyTask
-from pyams_scheduler.interfaces.task import TASK_STATUS_EMPTY, TASK_STATUS_ERROR, TASK_STATUS_OK
+from pyams_scheduler.interfaces.task import TASK_STATUS_EMPTY, TASK_STATUS_ERROR, \
+    TASK_STATUS_FAIL, TASK_STATUS_OK
 from pyams_scheduler.task import Task
 from pyams_utils.factory import factory_config
 from pyams_utils.registry import get_utility
@@ -50,7 +51,9 @@ class AlchemyTask(Task):
     def run(self, report, **kwargs):  # pylint: disable=unused-argument
         """Run SQL query task"""
         try:
-            session = get_user_session(self.session_name, join=False, twophase=False,
+            session = get_user_session(self.session_name,
+                                       join=False,
+                                       twophase=False,
                                        use_zope_extension=False)
             try:
                 report.write('SQL query output\n'
@@ -61,7 +64,7 @@ class AlchemyTask(Task):
                 session.commit()
                 converter = get_utility(IAlchemyConverter, name=self.output_format)
                 result = converter.convert(results)
-                report.write('SQL output ({} records):\n\n'.format(results.rowcount))
+                report.write(f'SQL output ({results.rowcount} records):\n\n')
                 report.write(result)
                 return TASK_STATUS_OK, result
             except ResourceClosedError:
@@ -74,4 +77,4 @@ class AlchemyTask(Task):
                          'An SQL error occurred\n'
                          '=====================\n')
             report.write(''.join(traceback.format_exception(etype, value, tb)))
-            return TASK_STATUS_ERROR, None
+            return TASK_STATUS_FAIL, None
