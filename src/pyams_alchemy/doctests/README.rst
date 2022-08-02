@@ -147,7 +147,7 @@ Tasks should also handle SQL errors correctly:
     >>> task.query = 'select * from MISSING_TABLE'
     >>> status, result = task.run(report)
     >>> status
-    'error'
+    'fail'
     >>> result is None
     True
 
