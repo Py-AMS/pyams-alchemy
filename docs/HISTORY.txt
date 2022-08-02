@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.3.6
+-----
+ - use new status on scheduler task execution failure
+
 1.3.5
 -----
  - PyAMS_security interfaces refactoring
