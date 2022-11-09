@@ -23,7 +23,7 @@ DOCS = os.path.join(os.path.dirname(__file__),
 README = os.path.join(DOCS, 'README.txt')
 HISTORY = os.path.join(DOCS, 'HISTORY.txt')
 
-version = '1.3.6'
+version = '1.4.0'
 long_description = open(README).read() + '\n\n' + open(HISTORY).read()
 
 tests_require = [
@@ -66,7 +66,7 @@ setup(name='pyams_alchemy',
           'persistent',
           'pyams_security',
           'pyams_site',
-          'pyams_utils',
+          'pyams_utils >= 1.15.0',
           'pyramid',
           'sqlalchemy',
           'zope.annotation',

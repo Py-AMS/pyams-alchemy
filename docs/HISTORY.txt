@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.4.0
+-----
+ - allow usage of dynamic text formatters into scheduler SQL tasks
+
 1.3.6
 -----
  - use new status on scheduler task execution failure
