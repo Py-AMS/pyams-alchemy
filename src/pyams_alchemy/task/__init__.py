@@ -25,11 +25,11 @@ from zope.schema.fieldproperty import FieldProperty
 from pyams_alchemy.engine import get_user_session
 from pyams_alchemy.interfaces import IAlchemyConverter
 from pyams_alchemy.task.interfaces import IAlchemyTask
-from pyams_scheduler.interfaces.task import TASK_STATUS_EMPTY, TASK_STATUS_ERROR, \
-    TASK_STATUS_FAIL, TASK_STATUS_OK
+from pyams_scheduler.interfaces.task import TASK_STATUS_EMPTY, TASK_STATUS_FAIL, TASK_STATUS_OK
 from pyams_scheduler.task import Task
 from pyams_utils.factory import factory_config
 from pyams_utils.registry import get_utility
+from pyams_utils.text import render_text
 
 
 __docformat__ = 'restructuredtext'
@@ -56,11 +56,12 @@ class AlchemyTask(Task):
                                        twophase=False,
                                        use_zope_extension=False)
             try:
+                query = render_text(self.query)
                 report.write('SQL query output\n'
                              '================\n')
                 report.write('SQL query: \n    {}\n\n'.format(
-                    self.query.replace('\r', '').replace('\n', '\n    ')))
-                results = session.execute(self.query)
+                    query.replace('\r', '').replace('\n', '\n    ')))
+                results = session.execute(query)
                 session.commit()
                 converter = get_utility(IAlchemyConverter, name=self.output_format)
                 result = converter.convert(results)

@@ -34,6 +34,8 @@ class IAlchemyTaskInfo(Interface):
                           required=True)
 
     query = Text(title=_("SQL query text"),
+                 description=_("You can include dynamic fragments into your SQL code using "
+                               "PyAMS text renderers rules (see documentation)"),
                  required=True)
 
     output_format = Choice(title=_("Output format"),

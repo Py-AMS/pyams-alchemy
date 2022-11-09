@@ -165,6 +165,16 @@ Tasks should also handle SQL errors correctly:
     [SQL: select * from MISSING_TABLE]
     (Background on this error at: http://sqlalche.me/...)
 
+Please note that SQL tasks query can also use PyAMS text renderers:
+
+    >>> task.query = "select '${{now:%Y-%m-%d}}' as now "
+    >>> report = StringIO()
+    >>> status, result = task.run(report)
+    >>> status
+    'OK'
+    >>> result
+    '[{"now": "...-...-..."}]'
+
 
 Tests cleanup:
 
