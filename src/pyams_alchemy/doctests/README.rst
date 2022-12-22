@@ -163,7 +163,7 @@ Tasks should also handle SQL errors correctly:
     ...
     sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: MISSING_TABLE
     [SQL: select * from MISSING_TABLE]
-    (Background on this error at: http://sqlalche.me/...)
+    (Background on this error at: https://sqlalche.me/...)
 
 Please note that SQL tasks query can also use PyAMS text renderers:
 
