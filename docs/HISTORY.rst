@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.4.1
+-----
+ - added support for Python 3.11
+ - updated doctest
+
 1.4.0
 -----
  - allow usage of dynamic text formatters into scheduler SQL tasks
