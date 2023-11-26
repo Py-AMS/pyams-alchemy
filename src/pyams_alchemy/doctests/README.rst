@@ -58,7 +58,7 @@ An SQLAlchemy engine can be defined as a persistent utility:
 
     >>> sm = get_utility(IAlchemyManager)
     >>> sm
-    <pyams_alchemy.manager.AlchemyManager object at 0x... oid 0x... in <Connection at ...>>
+    <pyams_alchemy.manager.AlchemyManager object at 0x... oid 0x... in <ZODB.Connection.Connection object at 0x...>>
 
     >>> factory = get_object_factory(IAlchemyEngineUtility)
     >>> engine = factory()
@@ -83,7 +83,8 @@ We can now try to get a SQLAlchemy session from our registered utility:
     <sqlalchemy.orm.session.Session object at 0x...>
 
     >>> import transaction
-    >>> results = list(session.execute('select date()'))
+    >>> from sqlalchemy.sql import text
+    >>> results = list(session.execute(text('select date()')))
     >>> len(results)
     1
     >>> results[0][0]

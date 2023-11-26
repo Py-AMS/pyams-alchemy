@@ -19,11 +19,10 @@ from zope.annotation import IAttributeAnnotatable
 from zope.container.constraints import contains
 from zope.container.interfaces import IContainer
 from zope.interface import Interface
-from zope.schema import Bool, Choice, Int, TextLine
+from zope.schema import Bool, Int, TextLine
 
 from pyams_security.interfaces import IContentRoles
 from pyams_security.schema import PrincipalsSetField
-from pyams_utils.interfaces import ENCODINGS_VOCABULARY_NAME
 
 from pyams_alchemy import _
 
@@ -85,15 +84,6 @@ class IAlchemyEngineUtility(IAttributeAnnotatable):
                      description=_("Log all pool checkouts/checkins to system logger?"),
                      required=True,
                      default=False)
-
-    encoding = Choice(title=_('Encoding'),
-                      required=True,
-                      vocabulary=ENCODINGS_VOCABULARY_NAME,
-                      default='utf-8')
-
-    convert_unicode = Bool(title=_('Convert Unicode'),
-                           required=True,
-                           default=False)
 
     twophase = Bool(title=_("Two-phases commit?"),
                     description=_("Disable this option if two-phases commits should be "

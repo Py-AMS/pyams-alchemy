@@ -12,7 +12,7 @@
 
 """PyAMS_alchemy.converter.json module
 
-This module provides an utility which can be used to convert an SQLAlchemy
+This module provides a utility which can be used to convert an SQLAlchemy
 results proxy to JSON.
 """
 
@@ -36,6 +36,6 @@ class JSONAlchemyConverter:
         append = result.append
         keys = rows.keys()
         for row in rows:
-            value = dict(((key, row[key]) for key in keys))
+            value = dict(((key, getattr(row, key)) for key in keys))
             append(value)
         return json.dumps(result)

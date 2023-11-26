@@ -16,7 +16,7 @@
 __docformat__ = 'restructuredtext'
 
 from pyramid.i18n import TranslationStringFactory
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 
 _ = TranslationStringFactory('pyams_alchemy')

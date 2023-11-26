@@ -38,7 +38,7 @@ class CSVAlchemyConverter:
         writer = csv.DictWriter(output, fieldnames=keys, **kwargs)
         writer.writeheader()
         for row in rows:
-            value = dict(((key, row[key]) for key in keys))
+            value = dict(((key, getattr(row, key)) for key in keys))
             writer.writerow(value)
         output.seek(0)
         return output.read()

@@ -119,13 +119,10 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
     pool_size = FieldProperty(IAlchemyEngineUtility['pool_size'])
     pool_recycle = FieldProperty(IAlchemyEngineUtility['pool_recycle'])
     echo_pool = FieldProperty(IAlchemyEngineUtility['echo_pool'])
-    encoding = FieldProperty(IAlchemyEngineUtility['encoding'])
-    convert_unicode = FieldProperty(IAlchemyEngineUtility['convert_unicode'])
     twophase = FieldProperty(IAlchemyEngineUtility['twophase'])
 
     def __init__(self, name='', dsn='', echo=False, use_pool=True, pool_size=25, pool_recycle=-1,
-                 echo_pool=False, encoding='utf-8', convert_unicode=False, twophase=True,
-                 **kwargs):
+                 echo_pool=False, twophase=True, **kwargs):
         # pylint: disable=too-many-arguments
         self.name = name
         self.dsn = dsn
@@ -134,8 +131,6 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
         self.pool_size = pool_size
         self.pool_recycle = pool_recycle
         self.echo_pool = echo_pool
-        self.encoding = encoding
-        self.convert_unicode = convert_unicode
         self.twophase = twophase
         self.kw = PersistentMapping()  # pylint: disable=invalid-name
         self.kw.update(kwargs)
@@ -154,8 +149,6 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
             return create_engine(self.dsn,
                                  echo=self.echo,
                                  poolclass=NullPool,
-                                 encoding=self.encoding,
-                                 convert_unicode=self.convert_unicode,
                                  **kw)
         # Store engine into volatile attributes when pooling is enabled
         engine = getattr(self, '_v_engine', None)
@@ -167,8 +160,6 @@ class AlchemyEngineUtility:  # pylint: disable=too-many-instance-attributes
                               pool_size=self.pool_size,
                               pool_recycle=self.pool_recycle,
                               echo_pool=self.echo_pool,
-                              encoding=self.encoding,
-                              convert_unicode=self.convert_unicode,
                               **kw)
         return engine
 

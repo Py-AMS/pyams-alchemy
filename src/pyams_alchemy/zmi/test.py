@@ -122,8 +122,8 @@ class AlchemyEngineQueryGroup(FormGroupSwitcher):
     fields = Fields(IAlchemyEngineTestQuery)
     switcher_mode = 'always'
 
-    def update_widgets(self, prefix=None):
-        super().update_widgets(prefix)
+    def update_widgets(self, prefix=None, use_form_mode=True):
+        super().update_widgets(prefix, use_form_mode)
         query = self.widgets.get('query')
         if query is not None:
             query.add_class('height-100')

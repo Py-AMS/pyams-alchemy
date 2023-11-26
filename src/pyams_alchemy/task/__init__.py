@@ -20,6 +20,7 @@ import sys
 import traceback
 
 from sqlalchemy.exc import ResourceClosedError, SQLAlchemyError
+from sqlalchemy.sql import text
 from zope.schema.fieldproperty import FieldProperty
 
 from pyams_alchemy.engine import get_user_session
@@ -61,7 +62,7 @@ class AlchemyTask(Task):
                              '================\n')
                 report.write('SQL query: \n    {}\n\n'.format(
                     query.replace('\r', '').replace('\n', '\n    ')))
-                results = session.execute(query)
+                results = session.execute(text(query))
                 session.commit()
                 converter = get_utility(IAlchemyConverter, name=self.output_format)
                 result = converter.convert(results)
