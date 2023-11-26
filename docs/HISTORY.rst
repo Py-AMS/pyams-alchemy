@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.0
+-----
+ - upgraded to Pyramid 2.0 and SQLAlchemy 2.0
+
 1.4.1
 -----
  - added support for Python 3.11
