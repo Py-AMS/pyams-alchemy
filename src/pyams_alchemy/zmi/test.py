@@ -19,6 +19,7 @@ from html import escape
 from itertools import tee
 
 from sqlalchemy.exc import DatabaseError, ResourceClosedError
+from sqlalchemy.sql import text
 from zope.interface import Interface, alsoProvides
 from zope.schema import Text
 
@@ -43,7 +44,6 @@ from pyams_viewlet.viewlet import EmptyViewlet, ViewContentProvider, viewlet_con
 from pyams_zmi.form import AdminModalAddForm, FormGroupSwitcher
 from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.table import ButtonColumn, InnerTableAdminView, Table
-
 
 __docformat__ = 'restructuredtext'
 
@@ -91,11 +91,7 @@ class AlchemyEngineTestForm(AdminModalAddForm):
     # pylint: disable=abstract-method
     """SQLAlchemy engine test form"""
 
-    @property
-    def title(self):
-        """Form title getter"""
-        return self.request.localizer.translate(_("SQL engine: {}")).format(self.context.name)
-
+    subtitle = _("SQL test")
     modal_class = 'modal-max'
 
     fields = Fields(Interface)
@@ -224,7 +220,7 @@ class AlchemyEngineTestTable(Table):
             session = get_user_session(self.context.name, join=False, twophase=False,
                                        use_zope_extension=False)
             try:
-                self.results = list(session.execute(data['query']))
+                self.results = list(session.execute(text(data['query'])))
             except ResourceClosedError:
                 pass
         super().update()

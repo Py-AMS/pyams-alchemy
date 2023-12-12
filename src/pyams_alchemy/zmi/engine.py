@@ -27,9 +27,11 @@ from pyams_form.field import Fields
 from pyams_form.interfaces import DISPLAY_MODE
 from pyams_form.interfaces.form import IAJAXFormRenderer, IAddForm, IDataExtractedEvent
 from pyams_layer.interfaces import IPyAMSLayer
+from pyams_skin.interfaces.view import IModalEditForm, IModalPage
 from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.interfaces import IColumn
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.interfaces import MISSING_INFO
 from pyams_utils.interfaces.intids import IUniqueID
 from pyams_utils.registry import query_utility
 from pyams_utils.traversing import get_parent
@@ -37,12 +39,12 @@ from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
 from pyams_zmi.helper.event import get_json_table_row_add_callback, \
     get_json_table_row_refresh_callback
-from pyams_zmi.interfaces import IAdminLayer
+from pyams_zmi.interfaces import IAdminLayer, IObjectLabel, TITLE_SPAN_BREAK
+from pyams_zmi.interfaces.form import IFormTitle
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import ActionColumn, TableElementEditor
 from pyams_zmi.utils import get_object_label
-
 
 __docformat__ = 'restructuredtext'
 
@@ -100,13 +102,6 @@ class AlchemyEngineAddAction(ContextAddAction):
 class AlchemyEngineBaseAddFormMixin:
     """Alchemy engine base add form mixin"""
 
-    @property
-    def title(self):
-        translate = self.request.localizer.translate
-        return '<small>{}</small><br />{}'.format(
-            get_object_label(self.context, self.request, self),
-            translate(_("New SQL engine")))
-
 
 @ajax_form_config(name='add-sql-engine.html',
                   context=IAlchemyManager, layer=IPyAMSLayer,
@@ -114,6 +109,7 @@ class AlchemyEngineBaseAddFormMixin:
 class AlchemyEngineAddForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):  # pylint: disable=abstract-method
     """SQLAlchemy engine add form"""
 
+    subtitle = _("New SQL engine")
     legend = _("New engine properties")
 
     fields = Fields(IAlchemyEngineUtility)
@@ -125,44 +121,41 @@ class AlchemyEngineAddForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):  #
 
 
 #
-# Alchemy engine clone form
-#
-
-@adapter_config(name='clone',
-                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
-                provides=IColumn)
-class AlchemyEngineCloneColumn(ActionColumn):
-    """SQLAlchemy engine clone column"""
-
-    hint = _("Clone SQL engine")
-    icon_class = 'far fa-clone'
-
-    href = 'clone-sql-engine.html'
-
-    weight = 100
-
-
-@ajax_form_config(name='clone-sql-engine.html',
-                  context=IAlchemyEngineUtility, layer=IPyAMSLayer,
-                  permission=MANAGE_SQL_ENGINES_PERMISSION)
-class AlchemyEngineCloneForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):
-    """SQLAlchemy engine clone form"""
-
-    legend = _("Clone SQL connection")
-
-    fields = Fields(IAlchemyEngineUtility).select('name')
-
-    def create(self, data):
-        return copy(self.context)
-
-    def add(self, obj):
-        oid = IUniqueID(obj).oid
-        self.context.__parent__[oid] = obj
-
-
-#
 # Alchemy engine edit form
 #
+
+@adapter_config(required=(IAlchemyEngineUtility, IPyAMSLayer, Interface),
+                provides=IObjectLabel)
+def alchemy_engine_label(context, request, view):
+    """Alchemy engine label getter"""
+    return context.name or MISSING_INFO
+
+
+@adapter_config(name='form-title',
+                required=(IAlchemyEngineUtility, IPyAMSLayer, Interface),
+                provides=IObjectLabel)
+def alchemy_engine_form_label(context, request, view):
+    """Alchemy engine form label getter"""
+    translate = request.localizer.translate
+    return translate(_("SQL engine: {}")).format(context.name or MISSING_INFO)
+
+
+@adapter_config(required=(IAlchemyEngineUtility, IAdminLayer, IModalPage),
+                provides=IFormTitle)
+def alchemy_engine_form_title(context, request, form):
+    """Alchemy engine form title"""
+    manager = query_utility(IAlchemyManager)
+    return TITLE_SPAN_BREAK.format(
+        get_object_label(manager, request, form),
+        alchemy_engine_form_label(context, request, form))
+
+
+@adapter_config(required=(IAlchemyEngineUtility, IAdminLayer, IModalEditForm),
+                provides=IFormTitle)
+def alchemy_engine_edit_form_title(context, request, form):
+    manager = query_utility(IAlchemyManager)
+    return get_object_label(manager, request, form)
+
 
 @adapter_config(required=(IAlchemyEngineUtility, IAdminLayer, Interface),
                 provides=ITableElementEditor)
@@ -177,12 +170,9 @@ class AlchemyEngineEditForm(AdminModalEditForm):
     """SQLAlchemy engine properties edit form"""
 
     @property
-    def title(self):
+    def subtitle(self):
         translate = self.request.localizer.translate
-        manager = query_utility(IAlchemyManager)
-        return '<small>{}</small><br />{}'.format(
-            get_object_label(manager, self.request, self),
-            translate(_("SQL engine: {}")).format(self.context.name))
+        return translate(_("SQL engine: {}")).format(get_object_label(self.context, self.request, self))
 
     legend = _("SQL engine properties")
 
@@ -211,3 +201,40 @@ class AlchemyEngineEditFormAJAXRenderer(ContextRequestViewAdapter):
                                                     AlchemyManagerEnginesTable, self.context)
             ]
         }
+
+
+#
+# Alchemy engine clone form
+#
+
+@adapter_config(name='clone',
+                required=(IAlchemyManager, IAdminLayer, AlchemyManagerEnginesTable),
+                provides=IColumn)
+class AlchemyEngineCloneColumn(ActionColumn):
+    """SQLAlchemy engine clone column"""
+
+    hint = _("Clone SQL engine")
+    icon_class = 'far fa-clone'
+
+    href = 'clone-sql-engine.html'
+
+    weight = 100
+
+
+@ajax_form_config(name='clone-sql-engine.html',
+                  context=IAlchemyEngineUtility, layer=IPyAMSLayer,
+                  permission=MANAGE_SQL_ENGINES_PERMISSION)
+class AlchemyEngineCloneForm(AlchemyEngineBaseAddFormMixin, AdminModalAddForm):
+    """SQLAlchemy engine clone form"""
+
+    subtitle = _("New SQL engine")
+    legend = _("Clone SQL connection")
+
+    fields = Fields(IAlchemyEngineUtility).select('name')
+
+    def create(self, data):
+        return copy(self.context)
+
+    def add(self, obj):
+        oid = IUniqueID(obj).oid
+        self.context.__parent__[oid] = obj
