@@ -25,16 +25,15 @@ from pyams_form.group import GroupManager
 from pyams_form.interfaces.form import IForm, IInnerTabForm
 from pyams_form.subform import InnerAddForm, InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_scheduler.interfaces import IScheduler, MANAGE_TASKS_PERMISSION
-from pyams_scheduler.zmi import SchedulerTasksTable
+from pyams_scheduler.interfaces import ITaskContainer, MANAGE_TASKS_PERMISSION
 from pyams_scheduler.task.zmi import BaseTaskAddForm, BaseTaskEditForm
+from pyams_scheduler.zmi import TaskContainerTable
 from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import adapter_config
 from pyams_utils.interfaces.data import IObjectData
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
-
 
 __docformat__ = 'restructuredtext'
 
@@ -70,7 +69,7 @@ class AlchemyTaskFormInfo(GroupManager):
 
 
 @viewlet_config(name='add-sql-task.menu',
-                context=IScheduler, layer=IAdminLayer, view=SchedulerTasksTable,
+                context=ITaskContainer, layer=IAdminLayer, view=TaskContainerTable,
                 manager=IContextAddingsViewletManager, weight=100,
                 permission=MANAGE_TASKS_PERMISSION)
 class AlchemyTaskAddMenu(MenuItem):
@@ -81,7 +80,8 @@ class AlchemyTaskAddMenu(MenuItem):
     modal_target = True
 
 
-@ajax_form_config(name='add-sql-task.html', context=IScheduler, layer=IPyAMSLayer,
+@ajax_form_config(name='add-sql-task.html',
+                  context=ITaskContainer, layer=IPyAMSLayer,
                   permission=MANAGE_TASKS_PERMISSION)
 class AlchemyTaskAddForm(BaseTaskAddForm):
     """SQLAlchemy task add form"""
@@ -93,13 +93,14 @@ class AlchemyTaskAddForm(BaseTaskAddForm):
 
 
 @adapter_config(name='sql-task-info.form',
-                required=(IScheduler, IAdminLayer, AlchemyTaskAddForm),
+                required=(ITaskContainer, IAdminLayer, AlchemyTaskAddForm),
                 provides=IInnerTabForm)
 class AlchemyTaskAddFormInfo(AlchemyTaskFormInfo, InnerAddForm):
     """SQLAlchemy task add form info"""
 
 
-@ajax_form_config(name='properties.html', context=IAlchemyTask, layer=IPyAMSLayer,
+@ajax_form_config(name='properties.html',
+                  context=IAlchemyTask, layer=IPyAMSLayer,
                   permission=MANAGE_TASKS_PERMISSION)
 class AlchemyTaskEditForm(BaseTaskEditForm):
     """SQLAlchemy task edit form"""
