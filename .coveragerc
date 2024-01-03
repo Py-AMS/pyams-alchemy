@@ -1,3 +1,3 @@
 [run]
-source = src/pyams_alchemy
-omit = src/pyams_alchemy/tests/*
+source = pyams_alchemy
+omit = */pyams_alchemy/tests/*
