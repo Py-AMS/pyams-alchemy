@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.2
+-----
+ - updated task scheduler interfaces
+
 2.0.1
 -----
  - updated modal forms title
