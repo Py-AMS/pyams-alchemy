@@ -61,7 +61,7 @@ coverage:
     stage: quality
     allow_failure: true
     image:
-        name: sonarsource/sonar-scanner-cli:4.8.1
+        name: sonarsource/sonar-scanner-cli:4.3
         entrypoint: [""]
     variables:
         SONAR_URL: http://sonar.dev-dsm.onf.fr
