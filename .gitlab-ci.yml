@@ -61,13 +61,13 @@ coverage:
     stage: quality
     allow_failure: true
     image:
-        name: sonarsource/sonar-scanner-cli:latest
+        name: sonarsource/sonar-scanner-cli:4.8.1
         entrypoint: [""]
     variables:
         SONAR_URL: http://sonar.dev-dsm.onf.fr
         SONAR_HOST_URL: http://sonar.dev-dsm.onf.fr
     script:
-        - sonar-scanner -Dsonar.qualitygate.wait=true
+        - sonar-scanner -Dsonar.verbose=true
     only:
         - merge_requests
         - master
