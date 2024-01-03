@@ -27,7 +27,7 @@ version = '2.0.1'
 long_description = open(README).read() + '\n\n' + open(HISTORY).read()
 
 tests_require = [
-    'pyams_scheduler',
+    'pyams_scheduler >= 2.3.0',
     'pyams_zmi',
     'pyramid_zcml',
     'zope.exceptions'
