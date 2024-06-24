@@ -235,7 +235,7 @@ class AlchemyEngineTestTable(Table):
             except StopIteration:
                 pass
             else:
-                for col in row.keys():
+                for col in row._mapping.keys():
                     column = SQLColumn(self.context, self.request, self, col)
                     columns.append(column)
         self.columns = columns
