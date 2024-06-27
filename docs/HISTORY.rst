@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.0.3
+-----
+ - updated SQLAlchemy columns getter in test form
+ - Sonar scanner version reset
+
 2.0.2
 -----
  - updated task scheduler interfaces
