@@ -35,7 +35,7 @@ class DynamicSchemaMixin:
     @classmethod
     def get_schema_settings_name(cls):
         """Class table schema settings name getter"""
-        return 'pyams_alchemy:{0}.{1}.schema'.format(cls.__module__, cls.__name__)
+        return f'pyams_alchemy.{cls.__module__}.{cls.__name__}.schema'
 
     @classmethod
     def get_schema(cls):
