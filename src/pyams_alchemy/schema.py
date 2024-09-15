@@ -40,15 +40,16 @@ class DynamicSchemaMixin:
     @classmethod
     def get_schema(cls):
         """Class table schema getter"""
-        settings_name = cls.get_schema_settings_name()
-        if settings_name:
-            registry = get_pyramid_registry()
-            if hasattr(registry, 'settings'):
-                return {
-                    'schema': registry.settings.get(settings_name, cls.__schema__)
-                }
+        schema_name = None
+        registry = get_pyramid_registry()
+        if hasattr(registry, 'settings'):
+            settings_name = cls.get_schema_settings_name()
+            schema_name = registry.settings.get(settings_name)
+            if not schema_name:
+                settings_name = f'pyams_alchemy.schema.{cls.__schema__}.alias'
+                schema_name = registry.settings.get(settings_name)
         return {
-            'schema': cls.__schema__
+            'schema': schema_name or cls.__schema__
         }
 
     @declared_attr
