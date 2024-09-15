@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.0
+-----
+ - updated syntax of settings used for dynamic schemas names
+ - added support for global schema name replacement using a single alias
+
 2.0.3
 -----
  - updated SQLAlchemy columns getter in test form
