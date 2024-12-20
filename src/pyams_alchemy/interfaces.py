@@ -18,7 +18,7 @@ This module defines mail package interfaces.
 from zope.annotation import IAttributeAnnotatable
 from zope.container.constraints import contains
 from zope.container.interfaces import IContainer
-from zope.interface import Interface
+from zope.interface import Attribute, Interface
 from zope.schema import Bool, Int, TextLine
 
 from pyams_security.interfaces import IContentRoles
@@ -120,6 +120,8 @@ ALCHEMY_CONVERTERS_VOCABULARY = 'pyams_alchemy.converters'
 
 class IAlchemyConverter(Interface):
     """Utility interface provided to convert an SQLAlchemy result proxy"""
+
+    mimetype = Attribute("Converted result MIME type")
 
     def convert(self, rows, **kwargs):
         """Convert provided rows to format provided by converter"""

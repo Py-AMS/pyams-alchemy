@@ -30,6 +30,8 @@ from pyams_utils.registry import utility_config
 class CSVAlchemyConverter:
     """SQLAlchemy converter to CSV format"""
 
+    mimetype = 'text/csv; charset=utf-8'
+
     @staticmethod
     def convert(rows, **kwargs):
         """Convert provided rows to CSV"""

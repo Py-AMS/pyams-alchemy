@@ -18,7 +18,7 @@ any SQL command execution.
 
 import sys
 import traceback
-
+from datetime import datetime, timezone
 from sqlalchemy.exc import ResourceClosedError, SQLAlchemyError
 from sqlalchemy.sql import text
 from zope.schema.fieldproperty import FieldProperty
@@ -31,7 +31,7 @@ from pyams_scheduler.task import Task
 from pyams_utils.factory import factory_config
 from pyams_utils.registry import get_utility
 from pyams_utils.text import render_text
-
+from pyams_utils.timezone import tztime
 
 __docformat__ = 'restructuredtext'
 
@@ -49,13 +49,23 @@ class AlchemyTask(Task):
     query = FieldProperty(IAlchemyTask['query'])
     output_format = FieldProperty(IAlchemyTask['output_format'])
 
+    def get_report_mimetype(self):
+        """Report MIME type getter"""
+        converter = get_utility(IAlchemyConverter, name=self.output_format)
+        return converter.mimetype
+
+    def get_report_filename(self):
+        """Report filename getter"""
+        now = tztime(datetime.now(timezone.utc))
+        return f'report-{now:%Y%m%d}-{now:%H%M}.{self.output_format}'
+
     def run(self, report, **kwargs):  # pylint: disable=unused-argument
         """Run SQL query task"""
+        session = get_user_session(self.session_name,
+                                   join=False,
+                                   twophase=False,
+                                   use_zope_extension=False)
         try:
-            session = get_user_session(self.session_name,
-                                       join=False,
-                                       twophase=False,
-                                       use_zope_extension=False)
             try:
                 query = render_text(self.query)
                 report.write('SQL query output\n'
@@ -66,8 +76,13 @@ class AlchemyTask(Task):
                 session.commit()
                 converter = get_utility(IAlchemyConverter, name=self.output_format)
                 result = converter.convert(results)
-                report.write(f'SQL output ({results.rowcount} records):\n\n')
-                report.write(result)
+                if self.attach_reports:
+                    report.write(f"SQL output: {results.rowcount} "
+                                 f"record{'s' if results.rowcount > 1 else ''}\n")
+                else:
+                    report.write(f"SQL output ({results.rowcount} "
+                                 f"record{'s' if results.rowcount > 1 else ''}):\n\n")
+                    report.write(result)
                 return TASK_STATUS_OK, result
             except ResourceClosedError:
                 report.write('SQL query returned no result.\n')

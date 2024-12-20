@@ -29,6 +29,8 @@ from pyams_utils.registry import utility_config
 class JSONAlchemyConverter:
     """SQLAlchemy converter to JSON format"""
 
+    mimetype = 'application/json; charset=utf-8'
+
     @staticmethod
     def convert(rows, **kwargs):  # pylint: disable=unused-argument
         """Convert provided rows to JSON"""
