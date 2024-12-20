@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.0
+-----
+ - added support for last PyAMS_scheduler (>= 2.5) package and attached task execution reports
+ - added support for Python 3.12
+
 2.1.0
 -----
  - updated syntax of settings used for dynamic schemas names
