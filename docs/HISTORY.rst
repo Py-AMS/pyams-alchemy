@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.1
+-----
+ - updated doctests
+
 2.3.0
 -----
  - added PyAMS_scheduler pipeline support for SQLAlchemy tasks
