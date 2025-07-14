@@ -18,7 +18,7 @@ This module defines common interfaces of SQLAlchemy scheduler task.
 __docformat__ = 'restructuredtext'
 
 from zope.interface import Interface
-from zope.schema import Choice, Text
+from zope.schema import Bool, Choice, Text
 
 from pyams_alchemy import _
 from pyams_alchemy.interfaces import ALCHEMY_CONVERTERS_VOCABULARY, ALCHEMY_ENGINES_VOCABULARY
@@ -38,11 +38,22 @@ class IAlchemyTaskInfo(Interface):
                                "PyAMS text renderers rules (see documentation)"),
                  required=True)
 
+    params = Text(title=_("Query params"),
+                  description=_("Query parameters can be entered in JSON format as a simple object "
+                                "or as a list of objects"),
+                  required=False)
+    
     output_format = Choice(title=_("Output format"),
                            description=_("Format into which query output should be returned"),
                            vocabulary=ALCHEMY_CONVERTERS_VOCABULARY,
                            required=True,
                            default='json')
+
+    log_output = Bool(title=_("Log output"),
+                      description=_("If 'no', output will be available as input values inside a pipeline "
+                                    "but won't be logged into task execution report"),
+                      required=True,
+                      default=True)
 
 
 class IAlchemyTask(ITask, IAlchemyTaskInfo):

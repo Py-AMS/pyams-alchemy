@@ -25,8 +25,10 @@ from pyams_form.group import GroupManager
 from pyams_form.interfaces.form import IForm, IInnerTabForm
 from pyams_form.subform import InnerAddForm, InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_scheduler.interfaces import ITaskContainer, MANAGE_TASKS_PERMISSION
+from pyams_scheduler.interfaces import MANAGE_TASKS_PERMISSION
+from pyams_scheduler.interfaces.folder import ITaskContainer
 from pyams_scheduler.task.zmi import BaseTaskAddForm, BaseTaskEditForm
+from pyams_scheduler.task.zmi.interfaces import ITaskInnerEditForm
 from pyams_scheduler.zmi import TaskContainerTable
 from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import adapter_config
@@ -61,11 +63,19 @@ class AlchemyTaskFormInfo(GroupManager):
         query = self.widgets.get('query')  # pylint: disable=no-member
         if query is not None:
             query.add_class('height-100')
-            query.widget_css_class = "editor height-400px"
+            query.widget_css_class = 'editor height-300px'
             query.object_data = {
                 'ams-filename': 'query.sql'
             }
             alsoProvides(query, IObjectData)
+        params = self.widgets.get('params')
+        if params is not None:
+            params.add_class('height-100')
+            params.widget_css_class = 'editor height-300px'
+            params.object_data = {
+                'ams-filename': 'params.json'
+            }
+            alsoProvides(params, IObjectData)
 
 
 @viewlet_config(name='add-sql-task.menu',
@@ -111,5 +121,6 @@ class AlchemyTaskEditForm(BaseTaskEditForm):
 @adapter_config(name='sql-task-info.form',
                 required=(IAlchemyTask, IAdminLayer, AlchemyTaskEditForm),
                 provides=IInnerTabForm)
+@implementer(ITaskInnerEditForm)
 class AlchemyTaskEditFormInfo(AlchemyTaskFormInfo, InnerEditForm):
     """SQLAlchemy task edit form info"""

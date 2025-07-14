@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2023-12-01 17:08+0100\n"
+"POT-Creation-Date: 2025-06-27 18:01+0200\n"
 "PO-Revision-Date: 2022-08-26 08:53+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,14 +15,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 3.10.dev0\n"
 "X-Generator: Poedit 2.2.1\n"
-
-#: src/pyams_alchemy/include.py:44
-msgid "Manage SQL engines properties"
-msgstr "Gérer les connexions SQL"
-
-#: src/pyams_alchemy/include.py:56
-msgid "SQL engines manager (role)"
-msgstr "Gestionnaire SQL (role)"
 
 #: src/pyams_alchemy/interfaces.py:53
 msgid "Engine name"
@@ -109,11 +101,64 @@ msgstr ""
 msgid "SQL managers"
 msgstr "Gestionnaires SQL"
 
+#: src/pyams_alchemy/include.py:44
+msgid "Manage SQL engines properties"
+msgstr "Gérer les connexions SQL"
+
+#: src/pyams_alchemy/include.py:56
+msgid "SQL engines manager (role)"
+msgstr "Gestionnaire SQL (role)"
+
+#: src/pyams_alchemy/zmi/__init__.py:42
+msgid "SQL connections"
+msgstr "Connexions SQL"
+
+#: src/pyams_alchemy/zmi/__init__.py:81 src/pyams_alchemy/zmi/__init__.py:125
+msgid "SQL engines"
+msgstr "Connexions SQL"
+
+#: src/pyams_alchemy/zmi/__init__.py:127
+msgid "List of SQL engines"
+msgstr "Liste des connexions SQL"
+
+#: src/pyams_alchemy/zmi/engine.py:64
+msgid "An SQLAlchemy engine is already registered with this name!"
+msgstr "Une connexion SQL a déjà été enregistrée avec ce nom !"
+
+#: src/pyams_alchemy/zmi/engine.py:97
+msgid "Add SQL engine"
+msgstr "Ajouter une connexion SQL"
+
+#: src/pyams_alchemy/zmi/engine.py:112 src/pyams_alchemy/zmi/engine.py:230
+msgid "New SQL engine"
+msgstr "Nouvelle connexion"
+
+#: src/pyams_alchemy/zmi/engine.py:113
+msgid "New engine properties"
+msgstr "Propriétés de la connexion"
+
+#: src/pyams_alchemy/zmi/engine.py:140 src/pyams_alchemy/zmi/engine.py:175
+#, python-format
+msgid "SQL engine: {}"
+msgstr "Connexion : {}"
+
+#: src/pyams_alchemy/zmi/engine.py:177
+msgid "SQL engine properties"
+msgstr "Propriétés de la connexion SQL"
+
+#: src/pyams_alchemy/zmi/engine.py:216
+msgid "Clone SQL engine"
+msgstr "Dupliquer la connexion"
+
+#: src/pyams_alchemy/zmi/engine.py:231
+msgid "Clone SQL connection"
+msgstr "Dupliquer une connexion SQL"
+
 #: src/pyams_alchemy/zmi/test.py:59
 msgid "Test engine"
 msgstr "Test SQL"
 
-#: src/pyams_alchemy/zmi/test.py:72 src/pyams_alchemy/task/__init__.py:45
+#: src/pyams_alchemy/zmi/test.py:72 src/pyams_alchemy/task/__init__.py:50
 msgid "SQL query"
 msgstr "Requête SQL"
 
@@ -156,51 +201,6 @@ msgstr "Test de la connexion SQL"
 msgid "SQL query results"
 msgstr "Résultats de la requête SQL"
 
-#: src/pyams_alchemy/zmi/engine.py:64
-msgid "An SQLAlchemy engine is already registered with this name!"
-msgstr "Une connexion SQL a déjà été enregistrée avec ce nom !"
-
-#: src/pyams_alchemy/zmi/engine.py:97
-msgid "Add SQL engine"
-msgstr "Ajouter une connexion SQL"
-
-#: src/pyams_alchemy/zmi/engine.py:112 src/pyams_alchemy/zmi/engine.py:230
-msgid "New SQL engine"
-msgstr "Nouvelle connexion"
-
-#: src/pyams_alchemy/zmi/engine.py:113
-msgid "New engine properties"
-msgstr "Propriétés de la connexion"
-
-#: src/pyams_alchemy/zmi/engine.py:140 src/pyams_alchemy/zmi/engine.py:168
-#, python-format
-msgid "SQL engine: {}"
-msgstr "Connexion : {}"
-
-#: src/pyams_alchemy/zmi/engine.py:170
-msgid "SQL engine properties"
-msgstr "Propriétés de la connexion SQL"
-
-#: src/pyams_alchemy/zmi/engine.py:216
-msgid "Clone SQL engine"
-msgstr "Dupliquer la connexion"
-
-#: src/pyams_alchemy/zmi/engine.py:231
-msgid "Clone SQL connection"
-msgstr "Dupliquer une connexion SQL"
-
-#: src/pyams_alchemy/zmi/__init__.py:42
-msgid "SQL connections"
-msgstr "Connexions SQL"
-
-#: src/pyams_alchemy/zmi/__init__.py:81 src/pyams_alchemy/zmi/__init__.py:125
-msgid "SQL engines"
-msgstr "Connexions SQL"
-
-#: src/pyams_alchemy/zmi/__init__.py:127
-msgid "List of SQL engines"
-msgstr "Liste des connexions SQL"
-
 #: src/pyams_alchemy/task/interfaces.py:31
 msgid "SQL session name"
 msgstr "Nom de la connexion"
@@ -224,23 +224,48 @@ msgstr ""
 "documentation)"
 
 #: src/pyams_alchemy/task/interfaces.py:41
+msgid "Query params"
+msgstr "Paramètres de la requête"
+
+#: src/pyams_alchemy/task/interfaces.py:42
+msgid ""
+"Query parameters can be entered in JSON format as a simple object or as a "
+"list of objects"
+msgstr ""
+"Vous pouvez fournir les paramètres de la requête au format JSON, sous la forme "
+"d'un objet unique ou d'une liste d'objets"
+
+#: src/pyams_alchemy/task/interfaces.py:46
+msgid "Log output"
+msgstr "Intégrer le résultat dans l'historique"
+
+#: src/pyams_alchemy/task/interfaces.py:47
+msgid ""
+"If 'no', output will be available as input values inside a pipeline but "
+"won't be logged into task execution report"
+msgstr ""
+"Si 'non', les résultats de la requête ne seront pas intégrés dans l'historique "
+"d'exécution de la tâche ; ces résultats pourront toujours être utilisés comme paramètres "
+"d'entrée d'une autre tâche dans le cas d'un pipeline"
+
+#: src/pyams_alchemy/task/interfaces.py:52
 msgid "Output format"
 msgstr "Format de sortie"
 
-#: src/pyams_alchemy/task/interfaces.py:42
+#: src/pyams_alchemy/task/interfaces.py:53
 msgid "Format into which query output should be returned"
 msgstr "Format dans lequel le résultat de la requête doit être renvoyé"
 
-#: src/pyams_alchemy/task/zmi/__init__.py:52
+#: src/pyams_alchemy/task/zmi/__init__.py:53
 msgid "SQL task settings"
 msgstr "Commande SQL"
 
 #. pylint: disable=no-member
-#: src/pyams_alchemy/task/zmi/__init__.py:61
+#: src/pyams_alchemy/task/zmi/__init__.py:62
 msgid "Select connection name..."
 msgstr "Pas de connexion sélectionnée"
 
-#: src/pyams_alchemy/task/zmi/__init__.py:79
+#: src/pyams_alchemy/task/zmi/__init__.py:88
 msgid "Add SQL query..."
 msgstr "Requête SQL"
 

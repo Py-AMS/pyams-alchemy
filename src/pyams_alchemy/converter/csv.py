@@ -22,6 +22,10 @@ import csv
 import io
 
 from pyams_alchemy.interfaces import IAlchemyConverter
+from pyams_alchemy.task import IAlchemyTask
+from pyams_scheduler.interfaces.task.pipeline import IPipelineOutput
+from pyams_utils.adapter import ContextAdapter, adapter_config
+from pyams_utils.dict import DotDict
 from pyams_utils.registry import utility_config
 
 
@@ -44,3 +48,19 @@ class CSVAlchemyConverter:
             writer.writerow(value)
         output.seek(0)
         return output.read()
+
+
+@adapter_config(name='csv',
+                required=IAlchemyTask,
+                provides=IPipelineOutput)
+class AlchemyTaskCsvPipelineOutput(ContextAdapter):
+    """SQLAlchemy task pipeline CSV output"""
+
+    def get_values(self, result):
+        if not result:
+            return {}
+        values = [
+            DotDict(item)
+            for item in csv.DictReader(io.StringIO(result))
+        ]
+        return values[0] if len(values) == 1 else values
