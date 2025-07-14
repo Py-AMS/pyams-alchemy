@@ -104,14 +104,14 @@ as scheduled tasks:
     >>> task.session_name = 'MY_SESSION'
     >>> task.query = 'select date() as now'
 
-    >>> from io import StringIO
-    >>> report = StringIO()
+    >>> from pyams_scheduler.task.report import Report
+    >>> report = Report()
 
     >>> status, result = task.run(report)
     >>> status
     'OK'
     >>> result
-    '[{"now": "...-...-..."}]'
+    '{"now": "...-...-..."}'
 
 Task output can also be defined in CSV format:
 
@@ -126,7 +126,7 @@ Task output can also be defined in CSV format:
 
 We can create tasks which doesn't return any result:
 
-    >>> report = StringIO()
+    >>> report = Report()
     >>> task.query = 'create table TEST1 (id integer)'
     >>> status, result = task.run(report)
     >>> status
@@ -135,16 +135,27 @@ We can create tasks which doesn't return any result:
     True
 
     >>> _ = report.seek(0)
-    >>> print(report.read())
-    SQL query output
-    ================
+    >>> print(report.report.getvalue())
+     ### SQL query output
     SQL query:
-        create table TEST1 (id integer)
+    <BLANKLINE>
+    <BLANKLINE>
+    ```
+    create table TEST1 (id integer)
+    ```
+    <BLANKLINE>
     SQL query returned no result.
+    <BLANKLINE>
+
+    >>> print(report.getvalue())
+    <h3>SQL query output</h3>
+    <p>SQL query:</p>
+    <p><code>create table TEST1 (id integer)</code></p>
+    <p>SQL query returned no result.</p>
 
 Tasks should also handle SQL errors correctly:
 
-    >>> report = StringIO()
+    >>> report = Report()
     >>> task.query = 'select * from MISSING_TABLE'
     >>> status, result = task.run(report)
     >>> status
@@ -153,28 +164,35 @@ Tasks should also handle SQL errors correctly:
     True
 
     >>> _ = report.seek(0)
-    >>> print(report.read())
-    SQL query output
-    ================
+    >>> print(report.report.getvalue())
+    ### SQL query output
     SQL query:
-        select * from MISSING_TABLE
-    An SQL error occurred
-    =====================
+    <BLANKLINE>
+    <BLANKLINE>
+    ```
+    select * from MISSING_TABLE
+    ```
+    <BLANKLINE>
+    **An SQL error occurred**
+    <BLANKLINE>
+    <BLANKLINE>
+    ```
     Traceback (most recent call last):
     ...
     sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: MISSING_TABLE
     [SQL: select * from MISSING_TABLE]
     (Background on this error at: https://sqlalche.me/...)
+    ```
 
 Please note that SQL tasks query can also use PyAMS text renderers:
 
     >>> task.query = "select '${{now:%Y-%m-%d}}' as now "
-    >>> report = StringIO()
+    >>> report = Report()
     >>> status, result = task.run(report)
     >>> status
     'OK'
     >>> result
-    '[{"now": "...-...-..."}]'
+    '{"now": "...-...-..."}'
 
 
 Tests cleanup:
