@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.0
+-----
+ - added PyAMS_scheduler pipeline support for SQLAlchemy tasks
+ - updated execution report format to Markdown
+
 2.2.0
 -----
  - added support for last PyAMS_scheduler (>= 2.5) package and attached task execution reports
