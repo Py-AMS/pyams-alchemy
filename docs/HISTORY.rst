@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.3
+-----
+ - packaging issue
+
 2.3.2
 -----
  - updated task execution report output
