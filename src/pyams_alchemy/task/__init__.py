@@ -102,7 +102,7 @@ class AlchemyTask(Task):
                         report.write_code(result)
                 return TASK_STATUS_OK, result
             except ResourceClosedError:
-                report.writeln('SQL query returned no result.')
+                report.writeln('SQL query returned no result.', suffix='\n')
                 return TASK_STATUS_EMPTY, None
         except SQLAlchemyError:
             session.rollback()
