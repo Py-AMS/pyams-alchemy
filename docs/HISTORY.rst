@@ -3,7 +3,8 @@ Changelog
 
 2.3.2
 -----
- -
+ - updated task execution report output
+
 2.3.1
 -----
  - updated doctests
